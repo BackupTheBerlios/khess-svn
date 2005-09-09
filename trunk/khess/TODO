@@ -1,0 +1,28 @@
+Khess
+=====
+
+- Perfiles de jugadores con conteo de elo ( posible integracion con FICS )
+- Implementar un parser del protocolo XBoard para integrar crafty y otros motores
+- Themes para el reloj
+- Traduccion de la notacion
+- Nuevo formato para reemplazar PGN
+- XML para crear problemas, con poscicion y respuesta
+- Editor de posciciones
+- Codigos ECO
+- Repertorio personalizado de aperturas
+
+GAME CORE
+- Checkear enrroque (cuando el rey esta en jaque o pasa por una casilla custodiada)
+- Checkear coronacion!
+
+INTERNET
+- Mostrar los shots por OSD
+- Añadir canales con +channel #
+- Consultar informacion de un determinado jugador
+
+PARSING:
+- Game 83: Your opponent, krawek, has lost contact or quit.
+
+
+
+

@@ -1,0 +1,34 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="khess" version="1">
+	<MenuBar>
+		<Menu name="player"><text>P&amp;layer</text>
+			<Action name="new_player" />
+			<Action name="edit_player" />
+		</Menu>
+		<Menu name="internet"><text>Internet</text>
+			<Action name="connect" />
+			<Action name="disconnect" />
+			<Separator />
+			<Action name="show_console" />
+			<Action name="see_channel" />
+			<Action name="open_chat"/>
+		</Menu>
+		<Menu name="match"><text>M&amp;atch</text>
+			<Action name="new_match" />
+			<Separator/>
+			<Action name="resign" />
+			<Menu name="draw_menu"> <text>Draw</text>
+				<Action name="offer_draw" />
+				<Action name="accept_draw" />
+				<Action name="reject_draw" />
+			</Menu>
+			<Action name="retract" />
+			<Separator />
+			<Action name="pause" />
+		</Menu>
+		<Menu name="database"><text>D&amp;atabase</text>
+			<Action name="load" />
+			<Action name="find" />
+		</Menu>
+	</MenuBar>
+</kpartgui>

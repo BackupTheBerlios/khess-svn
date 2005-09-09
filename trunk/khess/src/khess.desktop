@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Khess
+Name[xx]=Khess
+Exec=khess
+Icon=khess
+Type=Application
+MimeType=application/x-chess-pgn,Application;text/x-chess-pgn
+DocPath=khess/khess.html
+Comment=A KDE Chess Application
+Comment[es]=Una aplicación de ajedrez de KDE
+Terminal=false
