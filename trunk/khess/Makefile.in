@@ -655,8 +655,9 @@ dist-hook:
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
 
+
 #>+ 2
-KDE_DIST=khess.kdevelop.pcs stamp-h.in subdirs configure.files log.001 Makefile.cvs Doxyfile game.001 khess.kdevelop khess.kdevses 
+KDE_DIST=stamp-h.in subdirs configure.files Makefile.cvs Doxyfile 
 
 #>+ 2
 docs-am:

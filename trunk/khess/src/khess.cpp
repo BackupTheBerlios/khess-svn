@@ -269,13 +269,15 @@ void Khess::newLogin()
 
 	m_login->show();
 	
-	if ( m_login->exec() == QDialog::Accepted )
+	int result = m_login->exec() ;
+	
+	if ( result == QDialog::Accepted )
 	{
 		setupToolWindows();
 	}
-	else
+	else if ( result == 123 )
 	{
-// 		close();
+		newPlayer();
 	}
 }
 

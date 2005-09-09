@@ -147,4 +147,9 @@ void KHSelectUser::readCurrentPlayer( QIconViewItem *item)
 	emit playerSelected();
 }
 
+void KHSelectUser::showEvent(QShowEvent *)
+{
+	readPlayers();
+}
+
 #include "khselectuser.moc"

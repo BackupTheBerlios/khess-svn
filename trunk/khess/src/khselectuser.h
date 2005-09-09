@@ -45,6 +45,9 @@ class KHSelectUser : public KIconView
 		void readCurrentPlayer(QIconViewItem *item);
 		
 		
+	protected:
+		void showEvent(QShowEvent *);
+		
 	signals:
 		void playerSelected();
 		

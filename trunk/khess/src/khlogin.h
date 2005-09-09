@@ -38,9 +38,11 @@ class KHLogin : public KDialogBase
 		KHLogin(QWidget *parent = 0 );
 		~KHLogin();
 		
+		
 	private slots:
 		void setPlayerInformation();
 		void slotOk();
+		void slotUser1();
 		
 	private:
 		KHSelectUser *m_selector;

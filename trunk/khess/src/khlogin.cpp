@@ -25,10 +25,11 @@
 #include <qvbox.h>
 #include <kseparator.h>
 #include <kmessagebox.h>
+#include <kiconloader.h>
 
 #include "khwarrior.h"
 
-KHLogin::KHLogin(QWidget *parent ) : KDialogBase(parent, "KHLogin", true, i18n("Log in"), KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true)
+KHLogin::KHLogin(QWidget *parent ) : KDialogBase(parent, "KHLogin", true, i18n("Log in"), User1 |KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Ok, true)
 {
 	QVBox *page = makeVBoxMainWidget();
 	page->setMargin(5);
@@ -56,6 +57,9 @@ KHLogin::KHLogin(QWidget *parent ) : KDialogBase(parent, "KHLogin", true, i18n("
 	m_password = new KLineEdit(m_container);
 	
 	setModal(true);
+	
+	setButtonGuiItem (KDialogBase::User1, KGuiItem( i18n("Create a new user"), SmallIcon("penguin"), i18n("Click to create new user"), i18n("Clicking this button you can create a new user") ));
+	
 	hide();
 }
 
@@ -111,6 +115,11 @@ void KHLogin::slotOk()
 	{
 		KMessageBox::error(this, i18n("Please select a player"), i18n("Error"));
 	}
+}
+
+void KHLogin::slotUser1()
+{
+	done( 123 );
 }
 
 
