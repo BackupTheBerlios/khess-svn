@@ -27,7 +27,7 @@
 
 using namespace KNetwork;
 
-KHWebBrowser::KHWebBrowser( QWidget *parent) : KMdiChildView(parent, "WebBrowser")
+KHWebBrowser::KHWebBrowser( QWidget *parent) : QVBox(parent, "WebBrowser")
 {
 	setCaption (i18n("Web Browser"));
 	(new QVBoxLayout(this))->setAutoAdd(true);

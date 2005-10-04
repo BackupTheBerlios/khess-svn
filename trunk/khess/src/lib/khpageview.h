@@ -19,16 +19,16 @@
 #ifndef KHPAGEVIEW_H
 #define KHPAGEVIEW_H
 
-#include <kmdichildview.h>
+#include <qvbox.h>
 
 /**
 	@author David Cuadrado <krawek@gmail.com >
 */
-class KHPageView : public KMdiChildView
+class KHPageView : public QVBox
 {
 	Q_OBJECT
 	public:
-		KHPageView(const QString &caption, QWidget *parentWidget=0L, const char *name=0L, WFlags f=0);
+		KHPageView( QWidget *parentWidget=0L, const char*name=0L, WFlags f=0);
 		~KHPageView();
 
 };

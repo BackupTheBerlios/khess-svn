@@ -57,7 +57,7 @@ class KHInternetWidget : public QVBox
 		void setupTabs();
 		
 	signals:
-		void showWebPage(KMdiChildView * );
+// 		void showWebPage(KMdiChildView * );
 		void message2osd(const QString &);
 		void createNewMatch(KHMatch *);
 		void sendFicsMove(KHChessMove *);

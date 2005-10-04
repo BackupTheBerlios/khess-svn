@@ -23,7 +23,7 @@
 
 #include <qwidget.h>
 #include <khessiface.h>
-#include <kmdichildview.h>
+#include <qhbox.h>
 #include <kdebug.h>
 
 #include "khplayerinfobox.h"
@@ -45,14 +45,14 @@ class QPainter;
  * @version 0.1
  */
 
-class KHBoardView : public KMdiChildView, public KhessIface
+class KHBoardView : public QFrame, public KhessIface
 {
 	Q_OBJECT
 	public:
 		/**
 	 	* Default constructor
 	 	*/
-		KHBoardView(const QString &caption, QWidget *parentWidget=0L, KHMatch *match =0 , const char *name=0L, WFlags f=0);
+		KHBoardView(QWidget *parentWidget=0L, KHMatch *match =0 , const char *name=0L, WFlags f=0);
 
 		/**
 		 * Destructor

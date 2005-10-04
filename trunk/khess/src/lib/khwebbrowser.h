@@ -20,7 +20,7 @@
 #ifndef KHWEBBROWSER_H
 #define KHWEBBROWSER_H
 
-#include <kmdichildview.h>
+#include <qvbox.h>
 #include <kdebug.h>
 #include <klineedit.h>
 
@@ -35,7 +35,7 @@
 /**
  * @author David Cuadrado <krawek@gmail.com >
 */
-class KHWebBrowser : public KMdiChildView
+class KHWebBrowser : public QVBox
 {
 	Q_OBJECT
 	public:

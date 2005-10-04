@@ -25,7 +25,7 @@
 #include <qhbuttongroup.h>
 #include <kpushbutton.h>
 #include <klistview.h>
-#include <kmdichildview.h>
+
 #include <ktoolbar.h>
 #include <qtimer.h>
 #include <kmessagebox.h>
@@ -149,7 +149,7 @@ class LTListView : public QVBox
 		/**
 		 * Este signal envia el widget para ser puesto en la ventana principal
 		 */
-		virtual void sendWidget(KMdiChildView *); //= 0;
+// 		virtual void sendWidget(KMdiChildView *); //= 0;
 	
 	private:
 		QHButtonGroup *m_buttons;

@@ -348,7 +348,7 @@ int LTListViewItem::compare ( QListViewItem * i, int col, bool ascending )
 	{
 		return number;
 	}
-	QListViewItem::compare(i, col, ascending);
+	return QListViewItem::compare(i, col, ascending);
 }
 
 #include "ltlistview.moc"

@@ -20,7 +20,7 @@
 #ifndef KHHTMLPAGE_H
 #define KHHTMLPAGE_H
 
-#include <kmdichildview.h>
+
 #include <qlabel.h>
 #include <khtml_part.h>
 

@@ -76,7 +76,7 @@
 
 #include "khwebbrowser.h"
 
-Khess::Khess() : KMdiMainFrm( 0, "Khess-main", KMdi::IDEAlMode ), m_view(0), m_printer(0),m_internetWidget(0), m_databaseWidget(0), m_login(0)
+Khess::Khess() : DMainWindow( 0, "Khess-main"), m_view(0), m_printer(0),m_internetWidget(0), m_databaseWidget(0), m_login(0)
 {
 	setAcceptDrops(true);
 	
@@ -92,17 +92,8 @@ Khess::Khess() : KMdiMainFrm( 0, "Khess-main", KMdi::IDEAlMode ), m_view(0), m_p
 	show();
 	newLogin();
 	
-	QToolButton *closeCurrentTab = new QToolButton(tabWidget()); // avoid kdelibs 3.4 bug
-	closeCurrentTab->setIconSet(SmallIcon("tab_remove"));
-	
-	tabWidget()->setCornerWidget( closeCurrentTab, KToolBarButton::TopRight);
-	tabWidget()->show();
-	connect(closeCurrentTab, SIGNAL(clicked()), SLOT(closeCurrent()));
-	
-	setTabWidgetVisibility( KMdi::AlwaysShowTabs);
-	
 	KHWebBrowser *browser = new KHWebBrowser(this);
-	addWindow(browser);
+	addWidget(browser, i18n("Browser"));
 }
 
 Khess::~Khess()
@@ -112,10 +103,10 @@ Khess::~Khess()
 	if (m_login)
 		delete m_login;
 	
-	while( m_pCurrentWindow )
-	{
-		closeCurrent();
-	}
+// 	while( m_pCurrentWindow )
+// 	{
+// 		closeCurrent();
+// 	}
 }
 
 void Khess::setupOSD()
@@ -136,25 +127,25 @@ void Khess::setupToolWindows()
 {
 	if ( m_view )
 	{
-		closeWindow(m_view);
+		removeWidget(m_view);
 	}
 	
-	m_view = new KHPageView(i18n("Welcome"), this);
-	addWindow(m_view);
+	m_view = new KHPageView(this);
+	addWidget(m_view, i18n("Welcome"));
 	
 	// DATABASE
 	m_databaseWidget = new KHDatabaseWidget(this);
-	m_toolWindows << addToolWindow( m_databaseWidget, KDockWidget::DockLeft, getMainDockWidget() );
+	toolWindow(DDockWindow::Left)->addWidget( i18n("Database"), m_databaseWidget );
 	
 	connect(m_databaseWidget, SIGNAL(message2osd(const QString &)), this, SLOT(showNotice(const QString &)));
 	//////////////////
 	
 	// INTERNET
 	m_internetWidget = new KHInternetWidget(this);
-	m_toolWindows << addToolWindow(m_internetWidget, KDockWidget::DockLeft, getMainDockWidget());
+	toolWindow(DDockWindow::Bottom)->addWidget(i18n("Internet"), m_internetWidget);
 	connect(m_internetWidget, SIGNAL(message2osd(const QString &)), this, SLOT(showNotice(const QString &)));
 	connect(m_internetWidget, SIGNAL(createNewMatch(KHMatch *)), this, SLOT(createMatch(KHMatch *)));
-	connect(m_internetWidget, SIGNAL(showWebPage(KMdiChildView *)), this, SLOT(addWindow(KMdiChildView *)));
+// 	connect(m_internetWidget, SIGNAL(showWebPage(KMdiChildView *)), this, SLOT(addWindow(KMdiChildView *)));
 	
 	connect(m_internetWidget, SIGNAL(sendFicsMove(KHChessMove *)), this, SLOT(sendMoveToBoard(KHChessMove *)));
 	
@@ -172,7 +163,7 @@ void Khess::sendMoveToBoard(KHChessMove *move)
 	}
 	else
 	{
-		kdDebug() << "Juego no encontrado: " << gameId << endl;
+		kdDebug() << "Game finded: " << gameId << endl;
 	}
 }
 
@@ -242,25 +233,6 @@ void Khess::dragEnterEvent(QDragEnterEvent *event)
 
 void Khess::dropEvent(QDropEvent *event)
 {
-}
-
-void Khess::closeCurrent()
-{
-	// If there's a current view, close it
-	if ( m_pCurrentWindow != 0 )
-	{
-		KHBoardView *boardtmp = dynamic_cast<KHBoardView *>(m_pCurrentWindow);
-		
-		if ( boardtmp )
-		{
-			if (boardtmp->playerStatus())
-			{
-				deleteToolWindow(boardtmp->playerStatus());
-			}
-		}
-		
-		closeWindow( m_pCurrentWindow );
-	}
 }
 
 void Khess::newLogin()
@@ -366,8 +338,8 @@ void Khess::newMatch()
 
 void Khess::createMatch(KHMatch *match)
 {
-	KHBoardView *board = new KHBoardView(i18n("Game"), this, match );
-	addWindow(board);
+	KHBoardView *board = new KHBoardView(this, match );
+	addWidget(board, i18n("Game"));
 	connect(board, SIGNAL(signalChangeStatusbar(const QString&)), this,   SLOT(changeStatusbar(const QString&)));
 	connect(board, SIGNAL(signalChangeCaption(const QString&)),this,   SLOT(changeCaption(const QString&)));
 	
@@ -400,7 +372,7 @@ void Khess::createMatch(KHMatch *match)
 		
 		KHPlayersStatus *m_playersView = new KHPlayersStatus(match, this, match->id());
 
-		m_toolWindows << addToolWindow( m_playersView, KDockWidget::DockRight, getMainDockWidget() );
+		toolWindow(DDockWindow::Right)->addWidget(i18n("Players"), m_playersView );
 		
 		board->setCaption( match->white()->login()+ "("+QString::number(match->white()->elo())+ ")" + " vs " + match->black()->login()+"("+QString::number(match->black()->elo())+")"  );
 		

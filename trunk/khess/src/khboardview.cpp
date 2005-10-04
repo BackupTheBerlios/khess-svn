@@ -28,11 +28,10 @@
 
 #include "khclock.h"
 
-KHBoardView::KHBoardView(const QString &caption, QWidget *parentWidget, KHMatch *match, const char *name, WFlags f) : KMdiChildView(caption, parentWidget, name, f), DCOPObject("KhessIface"), m_playerStatus(0)
+KHBoardView::KHBoardView(QWidget *parentWidget, KHMatch *match, const char *name, WFlags f) : QFrame(parentWidget, name, f), DCOPObject("KhessIface"), m_playerStatus(0)
 {
 	m_layout = new QHBoxLayout(this);
-// 	m_layout->setAutoAdd(true);
-
+	
 	QVBox *m_boardContainer = new QVBox(this);
 	m_boardContainer->setMargin(30);
 	

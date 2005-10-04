@@ -25,10 +25,8 @@
 #include <config.h>
 #endif
 
-#include <kmainwindow.h>
-#include <kmdimainfrm.h>
 #include <qlabel.h>
-#include <kmdichildview.h>
+
 #include <klocale.h>
 #include <qlayout.h>
 #include <kiconloader.h>
@@ -38,7 +36,7 @@
 #include <qlayout.h>
 #include <kiconloader.h>
 #include <qvaluelist.h>
-#include <kmditoolviewaccessor.h>
+
 #include <kprinter.h>
 #include <qdict.h>
 
@@ -53,6 +51,8 @@
 #include "khengineparser.h"
 #include "khmatch.h"
 #include "khpageview.h"
+
+#include "dmainwindow.h"
 
 class KPrinter;
 class KURL;
@@ -72,7 +72,7 @@ typedef QDict<KHBoardView> KHGames;
  * @version 0.1
  */
 
-class Khess : public KMdiMainFrm
+class Khess : public DMainWindow
 {
 	Q_OBJECT
 	public:
@@ -110,8 +110,7 @@ class Khess : public KMdiMainFrm
 
 		void changeStatusbar(const QString& text);
 		void changeCaption(const QString& text);
-		
-		void closeCurrent();
+
 		void createMatch(KHMatch *);
 
 	private:
@@ -126,8 +125,7 @@ class Khess : public KMdiMainFrm
 		
 		KHInternetWidget *m_internetWidget;
 		KHDatabaseWidget *m_databaseWidget;
-				
-		QValueList<KMdiToolViewAccessor*> m_toolWindows;
+		
 		KHLogin *m_login;
 		
 		OSDWidget *m_osd;

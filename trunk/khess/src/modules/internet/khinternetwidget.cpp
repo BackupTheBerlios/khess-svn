@@ -106,14 +106,14 @@ void KHInternetWidget::sendAMove(KHFicsMove &m)
 
 void KHInternetWidget::sendPage(const QString &url, const QString &title)
 {
-	KMdiChildView *view = new KMdiChildView(title);
-	( new QVBoxLayout( view ) )->setAutoAdd( true );
-	
-	KHHtmlPage *page = new KHHtmlPage(view, "HTML_Page",  view, "HTML_Page" );
-	
-	page->openURL(url);
-	
-	emit showWebPage(view);
+// 	KMdiChildView *view = new KMdiChildView(title);
+// 	( new QVBoxLayout( view ) )->setAutoAdd( true );
+// 	
+// 	KHHtmlPage *page = new KHHtmlPage(view, "HTML_Page",  view, "HTML_Page" );
+// 	
+// 	page->openURL(url);
+// 	
+// 	emit showWebPage(view);
 }
 
 void KHInternetWidget::showChatWindow()
