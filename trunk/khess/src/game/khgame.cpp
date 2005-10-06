@@ -228,7 +228,7 @@ int KHGame::pointer( const int &file, const int &rank ) const
 void KHGame::setBoard( const QString &board, const short ppf )
 {
 	kdDebug() << "setBoard: " << board << endl;
-	QChar piece;
+	char piece;
 	int tmp(0), tmp2(0), cR(7), cF(0);
 	
 	for( uint tmp = 0; tmp < 74; tmp++ )
@@ -876,7 +876,7 @@ void KHGame::writeSAN()
 	{
 		/* Dropped piece = Special rules ( As Always ) */
 #warning "Error?"
-		SAN += QString(m_figuresOnBoard[manPtr].sanChar())+QString(QChar('@'))+QString(QChar( m_move.toFile() + 97 ))+QString( QChar(m_move.toRank() + 49 ));
+		SAN += QString("%1%2%3%4%5").arg(m_figuresOnBoard[manPtr].sanChar()).arg(char('@')).arg(char( m_move.toFile() + 97 )).arg( char(m_move.toRank() + 49 ));
 		m_move.setSan(SAN);
 		return;
 	}
