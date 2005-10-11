@@ -20,6 +20,7 @@
 
 #include "khgame.h"
 #include <kdebug.h>
+
 #include "khwarrior.h"
 
 KHGame::KHGame(KHMatch *match) : QObject(), m_isPaused(false), m_match(match), CF_King(0x01), CF_RookQ(0x02), CF_RookK(0x04)
@@ -171,7 +172,7 @@ void KHGame::doMove(KHChessMove *move)
 		m_move = *aMove;
 		
 		int tmp = 0;
-		while( tmp < 74 )
+		while( tmp < 64 )
 		{
 			emit redrawPosition( tmp++ );
 		}
@@ -227,27 +228,23 @@ int KHGame::pointer( const int &file, const int &rank ) const
 
 void KHGame::setBoard( const QString &board, const short ppf )
 {
+	clearBoard();
+	
 	kdDebug() << "setBoard: " << board << endl;
 	char piece;
-	int tmp(0), tmp2(0), cR(7), cF(0);
-	
-	for( uint tmp = 0; tmp < 74; tmp++ )
-	{
-		m_figuresOnBoard[tmp].setType(-1);
-		m_boardCore[tmp].setManPtr(-1);
-		m_boardCore[tmp].setNote( Position::NOTE_NONE );
-	}
+	int pos = 0, tmp2(0), cR(7), cF(0);
 
-// 	clearBoard();
 	if( board.length() < 64 )
 	{
 		kdWarning() << "logic::setBoard: Was passed a string that is less than 64 bytes long." << endl;
 		return;
 	}
 	
-	while( tmp < 64 )
+	while( pos < 64 )
 	{
-		piece = board.at(tmp++);
+		piece = board.at(pos++);
+		
+		kdDebug() << "*******PIECE: " << piece << endl;
 		
 		m_figuresOnBoard[tmp2] = Figure(piece);
 		
@@ -265,6 +262,9 @@ void KHGame::setBoard( const QString &board, const short ppf )
 			cF = 0;
 			cR--;
 		}
+		
+// 		emit redrawPosition( pos );
+		
 	}
 }
 
@@ -279,6 +279,16 @@ void KHGame::clearSelections()
 			m_boardCore[tmp].setNote(Position::NOTE_NONE);
 			emit redrawPosition( tmp );
 		}
+	}
+}
+
+void KHGame::clearBoard()
+{
+	for( uint tmp = 0; tmp < m_figuresOnBoard.count(); tmp++ )
+	{
+		m_figuresOnBoard[tmp].setType(-1);
+		m_boardCore[tmp].setManPtr(-1); // TODO: Reset function 
+		m_boardCore[tmp].setNote(Position::NOTE_NONE);
 	}
 }
 
@@ -1003,7 +1013,7 @@ void KHGame::writeSAN()
 
 void KHGame::writeCAN()
 {
-	QString can = QString("%1%2%3%4").arg(QChar(m_move.fromFile()+ 97)).arg(QChar(m_move.fromRank() + 49)).arg(QChar(m_move.toFile()+ 97)).arg(QChar(m_move.toRank() + 49));
+	QString can = QString("%1%2%3%4").arg(char(m_move.fromFile()+ 97)).arg(char(m_move.fromRank() + 49)).arg(char(m_move.toFile()+ 97)).arg(char(m_move.toRank() + 49));
 	
 	if( m_move.promote() != ' ' )
 	{

@@ -89,6 +89,7 @@ class KHGame : public QObject
 	public slots:
 		void slotSelect( int position );
 		void clearSelections();
+		void clearBoard();
 		
 	signals:
 		void redrawPosition(int position);

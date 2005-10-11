@@ -388,7 +388,10 @@ void KHBoard2D::drawPosition( int pos )
 		if( ( pos < 64 ) || (m_game->getFigureAt(pos).file() > 0 ) )
 		{
 			QPixmap chessman = getFigure( pos );
-			bitBlt( &buffer, 0, 0, &chessman, 0, 0, -1, -1, Qt::CopyROP, false); // DIBUJA FIGURAS
+			if ( !chessman.isNull() )
+			{
+				bitBlt( &buffer, 0, 0, &chessman, 0, 0, -1, -1, Qt::CopyROP, false); // DIBUJA FIGURAS
+			}
 		}
 	}
 
@@ -470,7 +473,7 @@ void KHBoard2D::drawMove( const KHChessMove &chessMove, const bool &reverse )
 // 	else
 	{
 		/* Draw this position only if we're not animating */
-		drawPosition( toPtr);
+		drawPosition( toPtr );
 // 		drawVisuals( toPtr, HighlightFadeUp );
 		if( takenPtr != -1 )
 		{
@@ -554,7 +557,7 @@ QPoint KHBoard2D::coords( const int &rank, const int &file )
 
 QPixmap KHBoard2D::getFigure(const int &pos)
 {
-	QPixmap temp;
+	QPixmap temp/*(-1,-1)*/;
 
 	int type;
 	bool band;
