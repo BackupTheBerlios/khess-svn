@@ -26,6 +26,8 @@
 class QBoxLayout;
 class QToolButton;
 class QWidgetStack;
+
+
 class KComboBox;
 
 namespace Ideal {

@@ -17,17 +17,29 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+ 
+#ifndef USE_KDE
+#include "close.xpm"
+#endif
+
 #include "dtabwidget.h"
 
 #include <qtoolbutton.h>
 #include <qtabbar.h>
 
+#ifdef USE_KDE
 #include <kconfig.h>
 #include <kiconloader.h>
 #include <kapplication.h>
+#else
+#include <qapplication.h>
+#include <qsettings.h>
+#endif
+
+#include "comdefs.h"
 
 DTabWidget::DTabWidget(QWidget *parent, const char *name)
-    :KTabWidget(parent, name), m_closeButton(0)
+    :KTWCLASS(parent, name), m_closeButton(0)
 {
     setFocusPolicy(NoFocus);
     setMargin(0);
@@ -35,18 +47,29 @@ DTabWidget::DTabWidget(QWidget *parent, const char *name)
     loadSettings();
     
     if (!m_tabBarShown)
+    {
         tabBar()->hide();
+    }
     else {
         m_closeButton = new QToolButton(this);
+#ifdef USE_KDE
         m_closeButton->setIconSet(SmallIcon("tab_remove"));
+#else
+        m_closeButton->setIconSet(QIconSet( (const char **) close_xpm));
+#endif
         m_closeButton->adjustSize();
         m_closeButton->hide();
         setCornerWidget(m_closeButton, TopRight);
         
         if (m_closeOnHover)
+        {
+#ifdef USE_KDE
             setHoverCloseButton(true);
-
+#endif
+        }
+#ifdef USE_KDE
         setTabReorderingEnabled(true);
+#endif
     }
     
     connect(this, SIGNAL(currentChanged(QWidget*)), this, SLOT(setFocus(QWidget*)));
@@ -55,14 +78,26 @@ DTabWidget::DTabWidget(QWidget *parent, const char *name)
 
 void DTabWidget::loadSettings()
 {
+#ifdef USE_KDE
     KConfig *config = kapp->config();
     config->setGroup("UI");
 //    m_tabBarShown = config->readBoolEntry("TabBarShown", true);
     m_tabBarShown = ! config->readNumEntry("TabWidgetVisibility", 0);
     m_closeOnHover = config->readBoolEntry("CloseOnHover", false);
     m_closeButtonShown = config->readBoolEntry("ShowCloseTabsButton", true);
+
     //we do not delay hover close buttons - that looks and feels ugly
     setHoverCloseButtonDelayed(false);
+#else
+    QSettings config;
+    config.setPath("NewMDI", qApp->name(), QSettings::User );
+    
+    m_tabBarShown = !config.readNumEntry(SETTINGSPATH+"/UI/TabWidgetVisibility", 0);
+    m_closeOnHover = config.readBoolEntry(SETTINGSPATH+"/UI/CloseOnHover", false);
+    m_closeButtonShown = config.readBoolEntry(SETTINGSPATH+"/UI/ShowCloseTabsButton", true);
+    
+#endif
+    
 }
 
 void DTabWidget::saveSettings()
@@ -77,14 +112,18 @@ QToolButton *DTabWidget::closeButton() const
 void DTabWidget::setFocus(QWidget *w)
 {
     if (w)
+    {
         w->setFocus();
+    }
 }
 
 void DTabWidget::insertTab(QWidget *child, const QString &label, int index)
 {
     if (m_closeButton && m_closeButtonShown)
+    {
         m_closeButton->show();
-    KTabWidget::insertTab(child, label, index);
+    }
+    KTWCLASS::insertTab(child, label, index);
     if (index != -1) tabBar()->repaint();
 }
 
@@ -92,8 +131,10 @@ void DTabWidget::insertTab(QWidget *child, const QIconSet &iconset,
     const QString &label, int index)
 {
     if (m_closeButton && m_closeButtonShown)
+    {
         m_closeButton->show();
-    KTabWidget::insertTab(child, iconset, label, index);
+    }
+    KTWCLASS::insertTab(child, iconset, label, index);
     if (index != -1) tabBar()->repaint();
 }
 
@@ -103,4 +144,6 @@ void DTabWidget::insertTab(QWidget *child, const QIconSet &iconset,
         m_history.push(w);
 }*/
 
+
 #include "dtabwidget.moc"
+

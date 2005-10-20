@@ -92,8 +92,8 @@ Khess::Khess() : DMainWindow( 0, "Khess-main"), m_view(0), m_printer(0),m_intern
 	show();
 	newLogin();
 	
-	KHWebBrowser *browser = new KHWebBrowser(this);
-	addWidget(browser, i18n("Browser"));
+// 	KHWebBrowser *browser = new KHWebBrowser(this);
+// 	addWidget(browser, i18n("Browser"));
 }
 
 Khess::~Khess()

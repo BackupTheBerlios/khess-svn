@@ -23,6 +23,8 @@
 
 #include <kdebug.h>
 #include <kstringhandler.h>
+#include <kpopupmenu.h>
+
 
 #include "button.h"
 
@@ -107,7 +109,9 @@ void ButtonBar::setMode(ButtonMode mode)
 {
     m_mode = mode;
     for (ButtonList::iterator it = m_buttons.begin(); it != m_buttons.end(); ++it)
+    {
         (*it)->setMode(mode);
+    }
 }
 
 ButtonMode ButtonBar::mode() const
@@ -142,7 +146,9 @@ void ButtonBar::fixDimensions()
 void ButtonBar::setButtonsPlace(Ideal::Place place)
 {
     for (ButtonList::iterator it = m_buttons.begin(); it != m_buttons.end(); ++it)
+    {
         (*it)->setPlace(place);
+    }
 }
 
 void ButtonBar::resizeEvent(QResizeEvent *ev)
@@ -178,6 +184,7 @@ void ButtonBar::resizeEvent(QResizeEvent *ev)
 
 void ButtonBar::shrink(int preferredDimension, int actualDimension)
 {
+	qDebug("shrink");
     if (!preferredDimension)
         return;
     
@@ -212,7 +219,9 @@ void ButtonBar::shrink(int preferredDimension, int actualDimension)
     int i = 0;
     for (ButtonList::iterator it = m_buttons.begin(); it != m_buttons.end(); ++it)
     {
+
         (*it)->setText(KStringHandler::rsqueeze((*it)->realText(), texts[i++]));
+
         (*it)->updateSize();
     }
 }
@@ -260,9 +269,14 @@ void ButtonBar::deshrink(int preferredDimension, int actualDimension)
     for (ButtonList::iterator it = m_buttons.begin(); it != m_buttons.end(); ++it)
     {
         if (texts[i] >= (*it)->realText().length())
+        {
             (*it)->setText((*it)->realText());
+        }
         else
+        {
             (*it)->setText(KStringHandler::rsqueeze((*it)->realText(), texts[i]));
+
+        }
         (*it)->updateSize();
         ++i;
     }
@@ -296,6 +310,35 @@ bool ButtonBar::autoResize() const
 void ButtonBar::setAutoResize(bool b)
 {
     m_autoResize = b;
+}
+
+void ButtonBar::mousePressEvent(QMouseEvent *e)
+{
+	if (e->button() == Qt::RightButton)
+	{
+		KPopupMenu *menu = new KPopupMenu(this);
+		
+		menu->insertItem(tr("Only text"), this, SLOT(onlyText()));
+		menu->insertItem(tr("Only icons"), this, SLOT(onlyIcons()));
+		menu->insertItem(tr("Icons and text"), this, SLOT(textAndIcons()));
+		
+		menu->exec(e->globalPos());
+	}
+}
+
+void ButtonBar::onlyIcons()
+{
+	setMode(Icons);
+}
+
+void ButtonBar::onlyText()
+{
+	setMode(Text);
+}
+
+void ButtonBar::textAndIcons()
+{
+	setMode(IconsAndText);
 }
 
 }

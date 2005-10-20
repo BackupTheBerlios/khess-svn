@@ -20,11 +20,17 @@
 #ifndef DTABWIDGET_H
 #define DTABWIDGET_H
 
+#ifdef USE_KDE
 #include <ktabwidget.h>
+#define KTWCLASS KTabWidget
+#else
+#include <qtabwidget.h>
+#define KTWCLASS QTabWidget
+#endif
 
 class QToolButton;
 
-class DTabWidget: public KTabWidget {
+class DTabWidget: public KTWCLASS {
     Q_OBJECT
 public:
     DTabWidget(QWidget *parent=0, const char *name=0);

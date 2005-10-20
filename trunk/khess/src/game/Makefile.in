@@ -638,7 +638,7 @@ clean-metasources:
 	-rm -f  khgame.moc khmatch.moc
 
 #>+ 2
-KDE_DIST=Makefile.in libgame.a 
+KDE_DIST=khgame.loT Makefile.in libgame.a 
 
 #>+ 2
 docs-am:

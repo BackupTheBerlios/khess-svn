@@ -1,6 +1,8 @@
 /***************************************************************************
  *   Copyright (C) 2004 by Alexander Dymo                                  *
  *   adymo@kdevelop.org                                                    *
+  *   Copyright (C) 2004 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -17,6 +19,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifndef IDEALBUTTON_H
 #define IDEALBUTTON_H
 
@@ -29,72 +32,75 @@
 namespace Ideal {
 
 class ButtonBar;
+class Button;
 
 /**
-@short A button to place onto the ButtonBar
+ * @short A button to place onto the ButtonBar
+ * A QPushButton derivative with a size of a QToolBar. Button can be rotated (placed onto different places in ideal mode).
+ */
+		       class Button : public QPushButton {
+	       Q_OBJECT
+			       public:
+				       Button(ButtonBar *parent, const QString text, const QIconSet &icon = QIconSet(),
+					      const QString &description = QString::null);
+				       virtual ~Button();
+    
+				       /**Sets the description used as a tooltip.*/
+				       void setDescription(const QString &description);
+				       /**Returns the description.*/
+				       QString description() const;
+    
+				       /**Sets the place of a button.*/
+				       void setPlace(Ideal::Place place);
+				       /**Sets the mode of a button.*/
+				       void setMode(Ideal::ButtonMode mode);
 
-A QPushButton derivative with a size of a QToolBar. Button can be rotated 
-(placed onto different places in ideal mode).
-*/
-class Button : public QPushButton {
-    Q_OBJECT
-public:
-    Button(ButtonBar *parent, const QString text, const QIconSet &icon = QIconSet(),
-        const QString &description = QString::null);
-    virtual ~Button();
+				       QSize sizeHint() const;
+				       QSize sizeHint(const QString &text) const;
     
-    /**Sets the description used as a tooltip.*/
-    void setDescription(const QString &description);
-    /**Returns the description.*/
-    QString description() const;
+				       /**Updates size of a widget. Used after squeezing button's text.*/
+				       void updateSize();
     
-    /**Sets the place of a button.*/
-    void setPlace(Ideal::Place place);
-    /**Sets the mode of a button.*/
-    void setMode(Ideal::ButtonMode mode);
+				       /**Returns the real (i.e. not squeezed) text of a button.*/
+				       QString realText() const;
+				       
+				       QStyle::SFlags buttonFlags() const;
+				       
+			       protected slots:
+				       virtual void animate();
+    
+			       protected:
+				       ButtonMode mode();
+    
+				       virtual void drawButton(QPainter *p);
+				       virtual void drawButtonLabel(QPainter *p);
+				       
+				       virtual void enterEvent( QEvent* );
+				       virtual void leaveEvent( QEvent* );
 
-    QSize sizeHint() const;
-    QSize sizeHint(const QString &text) const;
+			       private:
+				       class Animation;
     
-    /**Updates size of a widget. Used after squeezing button's text.*/
-    void updateSize();
     
-    /**Returns the real (i.e. not squeezed) text of a button.*/
-    QString realText() const;
-    QStyle::SFlags buttonFlags() const;
+				       void fixDimensions(Place oldPlace);
     
-	protected slots:
-		virtual void animate();
-		
-protected:
-    ButtonMode mode();
-    virtual void paintEvent(QPaintEvent *e);
-    virtual void drawButton(QPainter *p);
-    virtual void enterEvent( QEvent* );
-    virtual void leaveEvent( QEvent* );
-
-private:
-    class Animation;
+				       void enableIconSet();
+				       void disableIconSet();
+				       void enableText();
+				       void disableText();
     
-    void fixDimensions(Place oldPlace);
+				       ButtonBar *m_buttonBar;
     
-    void enableIconSet();
-    void disableIconSet();
-    void enableText();
-    void disableText();
+				       QString m_description;
+				       Place m_place;
     
-    ButtonBar *m_buttonBar;
+				       QString m_realText;
+				       QIconSet m_realIconSet;
     
-    QString m_description;
-    Place m_place;
+				       Animation *m_animation;
     
-    QString m_realText;
-    QIconSet m_realIconSet;
-    
-    Animation *m_animation;
-    
-friend class ButtonBar;
-};
+				       friend class ButtonBar;
+		       };
 
 }
 

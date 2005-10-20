@@ -21,6 +21,8 @@
 #define DMAINWINDOW_H
 
 #include <kparts/mainwindow.h>
+#define MWCLASS KParts::MainWindow
+
 
 #include "ddockwindow.h"
 
@@ -30,7 +32,7 @@ namespace Ideal {
 }
 
 /**Main window which provides simplified IDEA mode.*/
-class DMainWindow: public KParts::MainWindow {
+class DMainWindow: public MWCLASS {
     Q_OBJECT
 public:
     DMainWindow(QWidget *parent = 0, const char *name = 0);
@@ -41,13 +43,12 @@ public:
     
     /**Adds a tabbed widget into the active (focused) tab widget. 
     If @p widget is null then only tab is created.*/
+    virtual void addWidget(QWidget *widget, const QString &title);
     virtual void addWidget(DTabWidget *tab, QWidget *widget, const QString &title);
     /**Removes widget. Does not delete it.*/
     virtual void removeWidget(QWidget *widget);
-    void removeAll();
     
 public slots:
-	virtual void addWidget(QWidget *widget, const QString &title);
     DTabWidget *splitHorizontal();
     DTabWidget *splitVertical();
     
@@ -72,22 +73,23 @@ protected:
     virtual void createToolWindows();
     virtual DTabWidget *createTab();
     
-    DDockWindow *m_leftDock;
-    DDockWindow *m_rightDock;
-    DDockWindow *m_bottomDock;
+protected:
+    DDockWindow *m_pLeftDock;
+    DDockWindow *m_pRightDock;
+    DDockWindow *m_pBottomDock;
 
-    Ideal::DockSplitter *m_central;
-    DTabWidget *m_activeTabWidget;
+    Ideal::DockSplitter *m_pCentral;
+    DTabWidget *m_pActiveTabWidget;
     
-    QValueList<DTabWidget*> m_tabs;
+    QValueList<DTabWidget*> m_pTabs;
     
-    bool m_openTabAfterCurrent;
-    bool m_showIconsOnTabs;
-    bool m_firstRemoved;
+    bool m_pOpenTabAfterCurrent;
+    bool m_pShowIconsOnTabs;
+    bool m_pFirstRemoved;
     
-    QValueList<QWidget*> m_widgets;
-    QMap<QWidget*, DTabWidget*> m_widgetTabs;
-    QWidget *m_currentWidget;
+    QValueList<QWidget*> m_pWidgets;
+    QMap<QWidget*, DTabWidget*> m_pWidgetTabs;
+    QWidget *m_pCurrentWidget;
 
 private slots:
     void invalidateActiveTabWidget();
