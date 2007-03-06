@@ -19,22 +19,20 @@
 #ifndef KHAPP_H
 #define KHAPP_H
 
-#include <kapplication.h>
+#include <dapplication.h>
 
 /**
 	@author David Cuadrado - <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class KHApp : public DApplication
 {
 	Q_OBJECT
 	public:
 		KHApp(int &argc, char **argv);
 		~KHApp();
 		
-		KConfig *config(const QString &group = "General");
-		
 };
 
-#define khapp static_cast<KHApp*>(kapp)
+#define khApp static_cast<KHApp*>(qApp)
 
 #endif

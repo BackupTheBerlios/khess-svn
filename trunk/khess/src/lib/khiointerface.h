@@ -37,7 +37,7 @@ class KHIOInterface : public QObject
 		virtual void sendToResource(const QString &data) = 0;
 		
 	public slots:
-		virtual void connectToResource(const QString &node, const QString &opt = QString::null) = 0;
+		virtual void connectToResource(const QString &node, const QString &opt = QString() ) = 0;
 		virtual void closeResource() = 0;
 		
 	signals:

@@ -21,47 +21,8 @@
 #ifndef _KHESS_H_
 #define _KHESS_H_
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <qlabel.h>
-
-#include <klocale.h>
-#include <qlayout.h>
-#include <kiconloader.h>
-#include <klistbox.h>
-#include <kstatusbar.h>
-#include <kactionclasses.h>
-#include <qlayout.h>
-#include <kiconloader.h>
-#include <qvaluelist.h>
-
-#include <kprinter.h>
-#include <qdict.h>
-
-#include "osd.h"
-#include "khboardview.h"
-
-#include "khdatabasewidget.h"
-#include "khinternetwidget.h"
-
-#include "khlogin.h"
-#include "khparserbase.h"
-#include "khengineparser.h"
-#include "khmatch.h"
-#include "khpageview.h"
-
 #include "dmainwindow.h"
 
-class KPrinter;
-class KURL;
-class KHInternetIOInterface;
-class KHChatWindow;
-class KHFicsParser;
-class KHEngineParser;
-
-typedef QDict<KHBoardView> KHGames;
 
 /**
  * This class serves as the main window for Khess.  It handles the
@@ -77,31 +38,9 @@ class Khess : public DMainWindow
 	Q_OBJECT
 	public:
 		Khess();
-		virtual ~Khess();
-		void load(const KURL& url);
-
-	protected:
-		virtual void dragEnterEvent(QDragEnterEvent *event);
-		virtual void dropEvent(QDropEvent *event);
-
-	protected:
-		void saveProperties(KConfig *);
-		void readProperties(KConfig *);
-		
-		
-	public slots:
-		void showNotice(const QString &message);
-		void sendMoveToBoard(KHChessMove *);
-
-
+		~Khess();
+	
 	private slots:
-		void newLogin();
-		void newPlayer();
-		void newMatch();
-		void connectToServer();
-		void disconnectFromServer();
-		void showChatWindow();
-		
 		void fileOpen();
 		void fileSave();
 		void fileSaveAs();
@@ -111,26 +50,9 @@ class Khess : public DMainWindow
 		void changeStatusbar(const QString& text);
 		void changeCaption(const QString& text);
 
-		void createMatch(KHMatch *);
-
 	private:
-		void setupAccel();
-		void setupActions();
-		void setupToolWindows();
-		void setupOSD();
-
-	private:
-		KHPageView *m_view;
-		KPrinter   *m_printer;
-		
-		KHInternetWidget *m_internetWidget;
-		KHDatabaseWidget *m_databaseWidget;
-		
-		KHLogin *m_login;
-		
-		OSDWidget *m_osd;
-		
-		KHGames m_games;
+		struct Private;
+		Private *const d;
 };
 
 #endif // _KHESS_H_

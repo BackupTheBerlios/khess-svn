@@ -18,10 +18,10 @@
  ***************************************************************************/
  
 #include "khapp.h"
-#include <kconfig.h>
+#include <dconfig.h>
 
 KHApp::KHApp(int &argc, char **argv)
- : QApplication(argc, argv)
+ : DApplication(argc, argv)
 {
 }
 
@@ -30,10 +30,3 @@ KHApp::~KHApp()
 {
 }
 
-KConfig *KHApp::config( const QString &group )
-{
-	config()->setGroup( group );
-	return config();
-}
-
-#include "khapp.h"

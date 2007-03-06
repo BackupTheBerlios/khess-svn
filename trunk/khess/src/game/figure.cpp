@@ -20,13 +20,15 @@
 
 #include "figure.h"
 
+#include <QChar>
+
 Figure::Figure() : m_band(true), m_type(-1), m_file(-1), m_rank(-1)
 {
 }
 
 Figure::Figure(QChar piece) : m_band(true), m_type(-1), m_file(-1), m_rank(-1)
 {
-	switch( piece.lower() )
+	switch( piece.toLower().toAscii() )
 	{
 		case 'k':
 		{

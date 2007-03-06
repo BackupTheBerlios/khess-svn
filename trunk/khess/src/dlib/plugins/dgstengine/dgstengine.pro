@@ -12,13 +12,13 @@ CONFIG += release \
           plugin 
 TEMPLATE = lib 
 
-!include(../../dlibconfig.pri) {
-error("Please configure first")
+!include(../../dlibconfig.pri){
+    error("Please configure first")
 }
 
 
-contains(DEFINES, HAVE_GST10) {
-HEADERS += dgstengine.h 
-SOURCES += dgstengine.cpp 
+contains(DEFINES, HAVE_GST10){
+    HEADERS += dgstengine.h 
+    SOURCES += dgstengine.cpp 
 }
 

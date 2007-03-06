@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "khchessmove.h"
-#include <kdebug.h>
 
 KHChessMove::KHChessMove()
 {

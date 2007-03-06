@@ -152,7 +152,7 @@ QT += opengl
     error("Run ./configure first!")
 }
 
-linux-g++{
+linux-g{
     TARGETDEPS += ../dcore/libdcore.so
 }
 

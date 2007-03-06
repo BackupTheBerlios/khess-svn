@@ -28,5 +28,3 @@ KHIOInterface::~KHIOInterface()
 {
 }
 
-
-#include "khiointerface.moc"
