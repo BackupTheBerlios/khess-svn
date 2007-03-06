@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,60 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTOOLVIEW_H
+#define DTOOLVIEW_H
+
+#include <QDockWidget>
+#include <QIcon>
+#include <dideality.h>
+
+class DViewButton;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_IDEAL_EXPORT DToolView : public QDockWidget
 {
-	Q_OBJECT
+	Q_OBJECT;
+	
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DToolView(const QString &title, const QIcon &icon = QIcon(), QWidget * parent = 0);
+		virtual ~DToolView();
 		
-		KConfig *config(const QString &group = "General");
+		void setDescription(const QString &description);
+		DViewButton *button() const;
+		QSize sizeHint() const;
 		
+		void setPerspective(int wsp);
+		int perspective() const;
+		
+		void setFixedSize(int s);
+		int fixedSize() const;
+		
+	private:
+		void setup();
+		
+		
+	private slots:
+		void saveSize(bool checked);
+		
+	protected:
+		virtual void showEvent(QShowEvent *e);
+		
+#if QT_VERSION < 0x040200
+	protected:
+		virtual bool event(QEvent *e);
+		
+	private:
+		Qt::DockWidgetArea m_area;
+#endif
+		
+	private:
+		DViewButton *m_button;
+		int m_size;
+		
+		int m_perspective;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

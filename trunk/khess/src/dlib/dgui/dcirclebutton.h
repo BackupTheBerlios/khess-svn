@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,70 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef CCBUTTON_H
+#define CCBUTTON_H
+/**
+ * @file dcirclebutton.h
+ * Include this file if you need the class DCircleButton
+ */
+#include <QPushButton>
+#include <QStyleOptionButton>
+#include "dcore/dglobal.h"
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @short The DCircleButton class provides a circular button
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+
+class D_GUI_EXPORT DCircleButton : public QPushButton
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		/**
+		 * Constructs a DCircleButton
+		 */
+		DCircleButton(int diameter, bool animate = true, QWidget *parent = 0);
+		/**
+		 * Destructor
+		 */
+		~DCircleButton();
 		
-		KConfig *config(const QString &group = "General");
+		QStyleOptionButton styleOption() const;
+		QSize sizeHint() const;
 		
-};
+	protected:
+		/**
+		 * Paints the button
+		 * @param e 
+		 */
+		void paintEvent(QPaintEvent *e);
+		
+		/**
+		 * Init animation
+		 */
+		void enterEvent(QEvent *);
+		/**
+		 * End animation
+		 */
+		void leaveEvent(QEvent *);
+		
+		/**
+		 * Creates mask of button
+		 */
+		virtual void paintMask();
+		
+	private slots:
+		void animate();
+		
+	private:
+		QPixmap m_mask;
+		QPixmap m_pix;
+		int m_diameter : 22;
+		
+		class Animator;
+		Animator *m_animator;
 
-#define khapp static_cast<KHApp*>(kapp)
+};
 
 #endif

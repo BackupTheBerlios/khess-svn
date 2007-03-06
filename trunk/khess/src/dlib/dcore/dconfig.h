@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,61 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DCONFIG_H
+#define DCONFIG_H
+
+#include <QObject>
+#include <QDir>
+#include <QHash>
+#include <QDomDocument>
+#include <QVariant>
+
+#include "dcore/dglobal.h"
+
+
+class DConfig;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado
+ * this is a dom config handler
 */
-class KHApp : public KApplication
+
+class D_CORE_EXPORT DConfig : public QObject
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		~DConfig();
+	protected:
+		explicit DConfig();
+		void init();
 		
-		KConfig *config(const QString &group = "General");
 		
+	public:
+		void beginGroup(const QString & prefix );
+		void endGroup();
+		
+		void setValue ( const QString & key, const QVariant & value );
+
+		QVariant value ( const QString & key, const QVariant & defaultValue = QVariant() ) const;
+
+		static DConfig *instance();
+		
+		bool isOk();
+		QDomDocument document();
+		
+		void sync();
+		
+	private:
+		QDomElement find(const QDomElement &element, const QString &key) const;
+		
+	private:
+		static DConfig *m_instance;
+		
+		class Private;
+		Private * const d;
+
 };
 
-#define khapp static_cast<KHApp*>(kapp)
+#define DCONFIG DConfig::instance()
 
 #endif

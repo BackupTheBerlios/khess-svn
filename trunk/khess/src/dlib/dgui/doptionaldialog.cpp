@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,53 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "doptionaldialog.h"
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include <QVBoxLayout>
+#include <QLabel>
+#include "dseparator.h"
+
+DOptionalDialog::DOptionalDialog(const QString &text,const QString &title,QWidget *parent) : QDialog(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	setWindowTitle(title);
+	m_layout = new QVBoxLayout;
+	
+	m_layout->addStretch(10);
+	
+	QLabel *label = new QLabel(text, this);
+	
+	m_layout->addWidget(label);
+	
+	m_layout->addStretch(10);
+	
+	m_layout->addWidget(new DSeparator);
+	
+	QHBoxLayout *buttonLayout = new QHBoxLayout;
+	buttonLayout->addStretch(1);
+	
+	m_checkBox = new QCheckBox(tr("Don't show again"));
+	buttonLayout->addWidget(m_checkBox);
+	
+	QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+	buttonLayout->addWidget(cancelButton);
+	
+	QPushButton *okButton = new QPushButton(tr("Accept"));
+	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+	buttonLayout->addWidget(okButton);
+	
+	m_layout->addLayout(buttonLayout);
+	setLayout(m_layout);
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DOptionalDialog::~DOptionalDialog()
+{
+}
+
+bool DOptionalDialog::shownAgain()
+{
+	return m_checkBox->isChecked();
+}
+

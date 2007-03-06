@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
  *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,20 +17,65 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
 
-#include "khess.h"
-#include <khapp.h>
+#ifndef SPELLHIGHLIGHTER_H
+#define SPELLHIGHLIGHTER_H
 
-#include <qregexp.h>
+#include <qsyntaxhighlighter.h>
 
+#include "dcore/dspeller.h"
+#include "dcore/dglobal.h"
 
-int main(int argc, char **argv)
+/**
+ * @if english
+ * This class represents a spell highlighter, the common use is in QTextEdit documents
+ * @code
+ * new DSpellHighlighter(textEdit->document());
+ * @endcode
+ * @elseif spanish
+ * Esta clase representa un destacador de ortografia, su uso mas comun es en documentos de QTextEdit
+ * @code
+ * new DSpellHighlighter(textEdit->document());
+ * @endcode
+ * @endif
+ * @author David Cuadrado <krawek@gmail.com>
+*/
+
+class D_CORE_EXPORT DSpellHighlighter : public QSyntaxHighlighter
 {
-	KHApp app(argc, argv);
+	public:
+		/**
+		 * @if english
+		 * Default constructor
+		 * @elseif spanish
+		 * Constructor por defecto
+		 * @endif
+		 * @param parent 
+		 * @return 
+		 */
+		DSpellHighlighter(QTextDocument * parent);
+		/**
+		 * Destructor
+		 * @return 
+		 */
+		~DSpellHighlighter();
+		
+		/**
+		 * @if english
+		 * Sets the resalt color
+		 * @elseif spanish
+		 * Pone el color de resaltado del widget
+		 * @endif
+		 * @param color 
+		 */
+		void setResaltColor(const QColor &color);
+		
+	protected:
+		virtual void highlightBlock ( const QString & text );
+		
+	private:
+		QColor m_resaltColor;
+		DSpeller *m_speller;
+};
 
-	Khess *widget = new Khess;
-	widget->show();
-
-	return app.exec();
-}
+#endif

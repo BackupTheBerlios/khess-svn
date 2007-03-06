@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DSPELLER_H
+#define DSPELLER_H
+
+#include <QObject>
+
+#include <QStringList>
+#include <QString>
+
+#include "dcore/dspellinterface.h"
+#include "dcore/dglobal.h"
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_CORE_EXPORT DSpeller : public QObject
 {
-	Q_OBJECT
+	Q_OBJECT;
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DSpeller(QObject *parent = 0);
+		~DSpeller();
 		
-		KConfig *config(const QString &group = "General");
+		bool checkWord(const QString &word);
+		QStringList suggestions(const QString &word);
 		
+	private:
+		QString removeExtraCharacters(const QString &str);
+		
+	private:
+		DSpellInterface *m_speller;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

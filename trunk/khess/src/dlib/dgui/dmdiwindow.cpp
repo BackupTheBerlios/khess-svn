@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by Jorge Cuadrado   				   *
+ *   kuadrosx@toonka.com  	   					   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,54 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dmdiwindow.h"
+#include "ddebug.h"
+#include <QMenu>
+#include <QEvent>
+#include <QMenuBar>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+DMdiWindow::DMdiWindow(QWorkspace* parent, const char* name): QMainWindow(parent), m_workspace(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	setObjectName(name);
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DMdiWindow::~DMdiWindow()
+{
+	
+}
+
+bool  DMdiWindow::event( QEvent * e )
+{
+	if ( e->type() == QEvent::Hide )
+	{
+		emit activate(false);
+	}
+	else if ( e->type() == QEvent::Show )
+	{
+		adjustSize();
+		emit activate(true);
+	}
+	else if( e->type() == QEvent::Show )
+	{
+		if(menuBar())
+		{
+			if ( isMaximized() )
+			{
+				menuBar()->hide();
+			}
+			else
+			{
+				menuBar()->show();
+			}
+		}
+	}
+
+	return QMainWindow::event(e );
+}
+
+QWorkspace* DMdiWindow::workspace()
+{
+	return m_workspace;
+}

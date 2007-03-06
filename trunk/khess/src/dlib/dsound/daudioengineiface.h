@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DAUDIOENGINEIFACE_H
+#define DAUDIOENGINEIFACE_H
+
+#include <QString>
+#include <QPluginLoader>
+#include <QUrl>
+#include <qplugin.h>
+#include <dcore/dglobal.h>
+
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_CORE_EXPORT DAudioEngineIface
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		virtual ~DAudioEngineIface() {}
+		virtual QString key() const = 0;
 		
-		KConfig *config(const QString &group = "General");
+		/**
+		 * If can't load this function returns -1, else returns the player id
+		 * @param url 
+		 * @param id 
+		 * @return 
+		 */
+		virtual int load( const QUrl &url, int id = -1 ) = 0;
 		
+		virtual bool init() = 0;
+		virtual bool play(int offset = 0) = 0;
+		
+		virtual void stop() = 0;
+		virtual void pause() = 0;
+		virtual void seek( uint ms ) = 0;
+		
+		virtual bool setCurrentPlayer(int id) = 0;
+		
+		virtual void setVolume(int percent) = 0;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
+Q_DECLARE_INTERFACE(DAudioEngineIface, "org.dlib.DAudioEngineIface/0.1");
 
 #endif
+

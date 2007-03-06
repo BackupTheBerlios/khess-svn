@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTREELISTWIDGET_H
+#define DTREELISTWIDGET_H
+
+#include <QTreeWidget>
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DTreeListWidget : public QTreeWidget
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DTreeListWidget(QWidget *parent = 0);
+		~DTreeListWidget();
+		void addItems(const QStringList &items);
+		QList<QTreeWidgetItem *> topLevelItems();
 		
-		KConfig *config(const QString &group = "General");
+		void setEditable(bool isEditable);
+		bool isEditable() const;
 		
+	public slots:
+		void removeAll();
+		
+	private slots:
+		void editDoubleClickedItem(QTreeWidgetItem *item, int col);
+		
+	protected slots:
+		virtual void closeEditor ( QWidget * editor, QAbstractItemDelegate::EndEditHint hint );
+		
+	signals:
+		void itemRenamed(QTreeWidgetItem *item);
+		
+	private:
+		bool m_isEditable;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,67 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "delabel.h"
+#include <QMouseEvent>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+DELabel::DELabel(const QString &text, QWidget *parent) : DSqueezeLabel(text, parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	m_editor = new QLineEdit(text, this);
+	m_editor->setFont( QFont( font().family(), 9 ) );
+	m_editor->hide();
+	
+	m_editor->setFocusPolicy(Qt::ClickFocus);
+	
+	connect( m_editor, SIGNAL( returnPressed() ), SLOT( applyText() ) );
+	connect( m_editor, SIGNAL( lostFocus() ), SLOT( applyText() ) );
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DELabel::~DELabel()
+{
+}
+
+void DELabel::mouseDoubleClickEvent( QMouseEvent *event )
+{
+	if ( event->button() == Qt::LeftButton )
+	{
+		edit();
+		event->accept();
+	}
+	else
+	{
+		event->ignore();
+	}
+}
+
+void DELabel::applyText()
+{
+	if(completeText() != m_editor->text())
+	{
+		setText( m_editor -> text() );
+		emit edited( m_editor->text() );
+	}
+	
+	m_editor->hide();
+}
+
+void DELabel::edit()
+{
+	m_editor->setText( completeText() );
+	m_editor->selectAll();
+	m_editor->resize( size() );
+	m_editor->show();
+	m_editor->setFocus();
+}
+
+void DELabel::clearFocus()
+{
+	m_editor->clearFocus();
+}
+
+void DELabel::setValidator(const QValidator * v)
+{
+	m_editor->setValidator(v);
+}
+

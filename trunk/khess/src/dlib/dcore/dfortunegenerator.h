@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@toonka.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
+#ifndef DFORTUNEGENERATOR_H
+#define DFORTUNEGENERATOR_H
 
-#include <kapplication.h>
+#include <QString>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class DFortuneGenerator
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		~DFortuneGenerator();
+		static DFortuneGenerator *self();
 		
-		KConfig *config(const QString &group = "General");
+		QString generate();
 		
+	protected:
+		DFortuneGenerator();
+		void findFortunePath();
+		
+		
+		
+	private:
+		struct Private;
+		Private *const d;
+		
+		static DFortuneGenerator *s_self;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
-
 #endif
+
+

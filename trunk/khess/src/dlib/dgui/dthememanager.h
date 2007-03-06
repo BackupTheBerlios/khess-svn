@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTHEMEMANAGER_H
+#define DTHEMEMANAGER_H
+
+#include <QXmlDefaultHandler>
+#include <QPalette>
+#include <dcore/dglobal.h>
+
+class DThemeDocument;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DThemeManager : public QXmlDefaultHandler
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DThemeManager();
+		~DThemeManager();
 		
-		KConfig *config(const QString &group = "General");
+		bool applyTheme(const QString &file);
+		bool applyTheme(const DThemeDocument &dd);
 		
-};
+		bool startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts);
+		
+		bool endElement( const QString& ns, const QString& localname, const QString& qname);
+		
+		bool error ( const QXmlParseException & exception );
+		bool fatalError ( const QXmlParseException & exception );
 
-#define khapp static_cast<KHApp*>(kapp)
+		bool characters ( const QString & ch );
+		
+		QColor getColor(const QXmlAttributes& atts);
+		
+	private:
+		QString m_root,m_qname;
+		QPalette m_palette;
+};
 
 #endif

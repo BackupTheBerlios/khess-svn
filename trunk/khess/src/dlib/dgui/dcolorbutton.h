@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,53 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DCOLORBUTTON_H
+#define DCOLORBUTTON_H
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include <QAbstractButton>
+#include <QMouseEvent>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
+#include <QDragMoveEvent>
+#include <QDropEvent>
+#include "dcore/dglobal.h"
+
+class QColor;
+
+class D_GUI_EXPORT DColorButton : public QAbstractButton
 {
-	Q_OBJECT
+	Q_OBJECT;
+	Q_PROPERTY( QColor color READ color WRITE setColor );
+
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
+		DColorButton( QWidget* parent = 0);
+		~DColorButton();
+
+		void setColor( const QColor& );
+		QColor color() const;
+
+		QSize sizeHint() const;
+		QSize minimumSizeHint() const;
+		void setPalette ( const QPalette & );
+
+	public slots:
+		virtual void showEditor();
+
+	signals:
+		void colorChanged(const QColor &color);
+
+	protected:
+		void paintEvent(QPaintEvent *e);
+		void mousePressEvent(QMouseEvent* e);
+		void mouseMoveEvent(QMouseEvent* e);
+		void dragEnterEvent(QDragEnterEvent* e);
+		void dragMoveEvent(QDragMoveEvent* e);
+		void dropEvent(QDropEvent* e);
+
+	private:
+		QColor m_color;
+		QPoint m_position;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
-
-#endif
+#endif //DCOLORBUTTON_H

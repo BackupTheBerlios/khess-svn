@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,56 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DIMAGEBUTTON_H
+#define DIMAGEBUTTON_H
+
+#include <QPushButton>
+#include <QImage>
+#include <QPixmap>
+#include <QIcon>
+#include <QTimer>
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * A image pressable
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+
+class D_GUI_EXPORT DImageButton : public QPushButton
 {
 	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
 
-#define khapp static_cast<KHApp*>(kapp)
+	public:
+		DImageButton(const QIcon &icon, int size, QWidget *parent = 0, bool animate = false);
+		DImageButton(const QIcon &icon, int size, QObject *reciever, const  char *slot, QWidget *parent = 0, bool animate = false);
+		~DImageButton();
+		virtual void setImage( const QIcon &icon);
+		
+		void setAnimated(bool anim);
+		
+	protected:
+		void enterEvent(QEvent *e);
+		void leaveEvent(QEvent *e);
+		
+		
+	private slots:
+		void animate();
+		
+	private:
+		void setup();
+		
+	private:
+		int m_imageSize;
+		class Animation;
+		Animation *m_animator;
+		
+		bool m_isAnimated;
+		
+// 	protected:
+// 		void resizeEvent(QResizeEvent *e);
+// 		void paintEvent(QPaintEvent *e);
+// 		QPixmap getPixmap();
+};
 
 #endif

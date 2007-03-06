@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DDATETABLE_H
+#define DDATETABLE_H
+
+#include <QTableWidget>
+#include <QDate>
+#include "dcore/dglobal.h"
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DDateTable : public QTableWidget
 {
-	Q_OBJECT
+	Q_OBJECT;
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DDateTable(QWidget *parent = 0);
+		~DDateTable();
 		
-		KConfig *config(const QString &group = "General");
+		void setDate(const QDate &date);
 		
+		void setMonth(int month);
+		
+		int cellWidth() const;
+		int cellHeight() const;
+		
+		QDate date() const;
+		
+	protected:
+		void paintEvent(QPaintEvent *e);
+		
+	private:
+		void setCellSize(int width, int height);
+		QDate dateFromPosition(int position);
+		
+	private slots:
+		QDate dateFromItem(QTableWidgetItem *item);
+		
+	signals:
+		void dateChanged(const QDate &date);
+		
+	private:
+		int m_cellWidth, m_cellHeight;
+		QDate m_date;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

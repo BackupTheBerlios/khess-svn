@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTERMTAB_H
+#define DTERMTAB_H
+
+#include <dgui/dtabwidget.h>
+#include <QToolButton>
+#include <dcore/dglobal.h>
+
+
+class DTerm;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DTermTab : public DTabWidget
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DTermTab(QWidget *parent = 0);
+		~DTermTab();
 		
-		KConfig *config(const QString &group = "General");
+	private slots:
+		void closeTermTab();
+		
+	public slots:
+		void closeTermTab(DTerm *term);
+		void newTerm();
+		void closeCurrentTerm();
+		
+	private:
+		QToolButton *m_newTab, *m_closeTab;
 		
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

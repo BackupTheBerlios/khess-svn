@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   Copyright (C) 2006 by David Cuadrado                                *
  *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -17,20 +17,75 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
 
-#include "khess.h"
-#include <khapp.h>
+#ifndef DVIEWBUTTON_H
+#define DVIEWBUTTON_H
 
-#include <qregexp.h>
+#include <QToolButton>
+#include <QStyleOptionToolButton>
+#include <dideality.h>
 
+class DToolView;
 
-int main(int argc, char **argv)
+/**
+ * @author David Cuadrado <krawek@gmail.com>
+*/
+class D_IDEAL_EXPORT DViewButton : public QToolButton
 {
-	KHApp app(argc, argv);
+	Q_OBJECT;
+	public:
+		DViewButton(Qt::ToolBarArea area, DToolView *toolView, QWidget * parent = 0 );
+		DViewButton(DToolView *toolView, QWidget *parent = 0 );
+		~DViewButton();
+		
+		void setArea(Qt::ToolBarArea area);
+		Qt::ToolBarArea area() const;
+		
+		QSize sizeHint() const;
+		
+		bool isSensible() const;
+		bool blending() const;
+		
+		DToolView *toolView() const;
+		
+	public slots:
+		void setSensible(bool s);
+		void setBlending(bool e);
+		
+	private:
+		void setup();
+		QMenu *createMenu();
+		QStyleOptionToolButton styleOption() const;
+		
+	protected:
+		virtual void paintEvent(QPaintEvent *e);
+		virtual void mousePressEvent(QMouseEvent *e);
+		virtual void enterEvent( QEvent* );
+		virtual void leaveEvent( QEvent* );
+		
+	public slots:
+		void setOnlyText();
+		void setOnlyIcon();
+		
+		void toggleView();
+		
+	private slots:
+		void animate();
+		void toggleSensibility();
+		
+	private:
+		Qt::ToolBarArea m_area;
+		
+		class Animator;
+		Animator *m_animator;
+		
+		bool m_isSensible;
+		
+		bool m_blending;
+		
+		QPalette m_palette;
+		
+		DToolView *m_toolView;
+};
 
-	Khess *widget = new Khess;
-	widget->show();
-
-	return app.exec();
-}
+#endif

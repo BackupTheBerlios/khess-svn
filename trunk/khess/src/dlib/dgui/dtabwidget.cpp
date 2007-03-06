@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                          	   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,62 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dtabwidget.h"
+#include <QWheelEvent>
+#include <QTabBar>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include "ddebug.h"
+
+DTabWidget::DTabWidget(QWidget *parent) : QTabWidget(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+}
 
-#define khapp static_cast<KHApp*>(kapp)
+
+DTabWidget::~DTabWidget()
+{
+}
+
+void DTabWidget::removeAllTabs()
+{
+	int count = this->count();
+	for (int i = 0; i < count; i++)
+	{
+		delete currentWidget();
+	}
+}
+
+#ifndef QT_NO_WHEELEVENT
+void DTabWidget::wheelEvent( QWheelEvent *ev )
+{
+	QRect rect = tabBar()->rect();
+	rect.setWidth( width() );
+	
+	if ( rect.contains(ev->pos()) )
+	{
+		wheelMove( ev->delta() );
+	}
+}
+
+void DTabWidget::wheelMove( int delta )
+{
+	if ( count() > 1 )
+	{
+		int current = currentIndex();
+		if ( delta < 0 )
+		{
+			current = (current + 1) % count();
+		}
+		else 
+		{
+			current--;
+			if ( current < 0 )
+				current = count() - 1;
+		}
+		setCurrentIndex( current );
+	}
+}
 
 #endif
+
+

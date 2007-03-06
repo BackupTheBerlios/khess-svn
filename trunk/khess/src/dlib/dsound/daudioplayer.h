@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,57 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DAUDIOPLAYER_H
+#define DAUDIOPLAYER_H
+
+#include <qobject.h>
+
+#include "daudioengineiface.h"
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_CORE_EXPORT DAudioPlayer : public QObject
 {
-	Q_OBJECT
+	Q_OBJECT;
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DAudioPlayer();
+		~DAudioPlayer();
 		
-		KConfig *config(const QString &group = "General");
+		static DAudioPlayer *instance();
 		
+		void loadEngine(const QString &engine);
+		
+		int load( const QUrl &url, int id = -1 );
+		void play(int offset = 0);
+		void pause();
+		
+		void setCurrentPlayer(int id);
+		
+		void stop();
+		void seek( uint ms );
+		void setVolume(int percent);
+		
+	private:
+		static DAudioPlayer *s_instance;
+		
+		DAudioEngineIface *m_engine;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
+namespace DPlayer
+{
+	inline int play(const QUrl &url, int seek = 0)
+	{
+		int id = DAudioPlayer::instance()->load(url);
+		
+		DAudioPlayer::instance()->play( seek );
+		
+		return id;
+	}
+};
 
 #endif
+
+

@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTOOLBOX_H
+#define DTOOLBOX_H
+
+#include <dcore/dglobal.h>
+#include <QToolBox>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DToolBox : public QToolBox
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DToolBox(QWidget *parent = 0);
+		~DToolBox();
+		void addPage(QWidget *page, const QString &title);
 		
-		KConfig *config(const QString &group = "General");
+	protected:
+		virtual void createIcon();
 		
-};
+	private slots:
+		void changeIcon(int index);
+		
+	private:
+		QIcon m_icon;
+		int m_lastIndex;
 
-#define khapp static_cast<KHApp*>(kapp)
+};
 
 #endif

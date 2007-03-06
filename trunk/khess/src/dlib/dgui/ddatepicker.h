@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,83 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DDATEPICKER_H
+#define DDATEPICKER_H
+
+#include <QFrame>
+#include <QToolButton>
+
+#include "dgui/ddatetable.h"
+#include "dcore/dglobal.h"
+
+class QComboBox;
+class QLabel;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * 
+ * @author David Cuadrado <krawek@gmail.com>
+ * 
 */
-class KHApp : public KApplication
+
+class D_GUI_EXPORT DDatePicker : public QFrame
+{
+	Q_OBJECT;
+	public:
+		DDatePicker(QWidget *parent = 0);
+		~DDatePicker();
+		void setDate(const QDate &date);
+		QDate date() const;
+		
+	private:
+		void fillWeeks(const QDate &date);
+		
+	public slots:
+		void setWeek(int week);
+		void setYear(int year);
+		
+	protected slots:
+		void previousYear();
+		void nextYear();
+		
+		void previousMounth();
+		void nextMounth();
+		
+	private slots:
+		void mounthFromAction(QAction *act);
+		
+	signals:
+		void dateChanged(const QDate &date);
+		
+	private:
+		QComboBox *m_week;
+		DDateTable *m_dateTable;
+		
+		class EditableButton;
+		
+		 QToolButton *m_mounth;
+		 EditableButton *m_year;
+};
+
+class DDatePicker::EditableButton : public QToolButton
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		EditableButton();
+		~EditableButton();
 		
-		KConfig *config(const QString &group = "General");
+	public slots:
+		void edit();
 		
+	private slots:
+		void emitYearSelected();
+		
+	signals:
+		void yearSelected(int year);
+		
+	private:
+		QLineEdit *m_editor;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

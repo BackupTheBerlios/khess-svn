@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DRADIOBUTTONGROUP_H
+#define DRADIOBUTTONGROUP_H
+
+#include <QGroupBox>
+#include <QRadioButton>
+#include <QBoxLayout>
+#include <QButtonGroup>
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DRadioButtonGroup : public QGroupBox
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DRadioButtonGroup(const QString &title, Qt::Orientation orientation, QWidget *parent = 0);
+		~DRadioButtonGroup();
 		
-		KConfig *config(const QString &group = "General");
+		void addItem ( const QString & text, int index = -1 );
+		void addItems(const QStringList &texts);
 		
+		int currentIndex() const;
+		void setCurrentIndex ( int index );
+		
+	private slots:
+		void emitButtonId(QAbstractButton *button);
+		
+	signals:
+		void clicked(int index);
+		
+	private:
+		Qt::Orientation m_orientation;
+		QBoxLayout *m_layout;
+		QButtonGroup *m_buttonGroup;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

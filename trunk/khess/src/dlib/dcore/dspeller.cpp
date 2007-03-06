@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,61 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dspeller.h"
+#include "daspellchecker.h"
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include <QtDebug>
+
+DSpeller::DSpeller(QObject *parent) : QObject(parent), m_speller(0)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
-
-#define khapp static_cast<KHApp*>(kapp)
-
+#if defined(HAVE_ASPELL)
+	m_speller = new DAspellChecker;
+#else
+#warning NO SPELL MACROS DEFINED!
 #endif
+}
+
+
+DSpeller::~DSpeller()
+{
+	if (m_speller) delete m_speller;
+}
+
+bool DSpeller::checkWord(const QString &word)
+{
+	if( m_speller)
+	{
+		return m_speller->checkWord(removeExtraCharacters(word));
+	}
+	return false;
+}
+
+QStringList DSpeller::suggestions(const QString &word)
+{
+	if ( m_speller )
+	{
+		return m_speller->suggestions(removeExtraCharacters(word));
+	}
+	
+	return QStringList();
+}
+
+QString DSpeller::removeExtraCharacters(const QString &str)
+{
+	QString result = str;
+	
+	if ( !result[0].isLetterOrNumber() )
+	{
+		result.remove(0,1);
+	}
+	
+	if(!result[result.length()-1].isLetterOrNumber() )
+	{
+		result.remove(result.length()-1,1);
+	}
+	
+	return result;
+}
+
+

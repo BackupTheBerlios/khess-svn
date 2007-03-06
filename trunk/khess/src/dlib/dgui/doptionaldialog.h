@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,60 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DOPTIONALDIALOG_H
+#define DOPTIONALDIALOG_H
+
+#include <QDialog>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @if english
+ * This class represents a dialog that is optional
+ * @elseif spanish
+ * Esta clase representa un dialogo que es opcional
+ * @endif
+ * 
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DOptionalDialog : public QDialog
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		/**
+		 * @if english
+		 * Default constructor
+		 * @elseif spanish
+		 * Constructor por defecto
+		 * @endif
+		 * @param text 
+		 * @param title 
+		 * @param parent 
+		 * @return 
+		 */
+		DOptionalDialog(const QString &text, const QString &title = 0, QWidget *parent = 0);
+		/**
+		 * Destructor
+		 * @return 
+		 */
+		~DOptionalDialog();
 		
-		KConfig *config(const QString &group = "General");
+		/**
+		 * @if english
+		 * This function returns true when the user wants to see the dialog again
+		 * @elseif spanish
+		 * Esta funcion retorna true cuando el usuario quiere volver a ver el dialogo
+		 * @endif
+		 * @return 
+		 */
+		bool shownAgain();
 		
+	private:
+		QBoxLayout *m_layout;
+		QCheckBox *m_checkBox;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

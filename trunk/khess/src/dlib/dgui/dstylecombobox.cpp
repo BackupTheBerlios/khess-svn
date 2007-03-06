@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@toonka.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dstylecombobox.h"
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include <QStyleFactory>
+#include <QApplication>
+
+#include <ddebug.h>
+
+DStyleComboBox::DStyleComboBox(QWidget *parent) : QComboBox(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	addItems( QStyleFactory::keys() );
+	
+	connect(this, SIGNAL(activated( const QString& )), this, SLOT(chooseStyle(const QString &)));
+	
+	setCurrentIndex( findText(QApplication::style()->objectName(), Qt::MatchExactly|Qt::MatchFixedString) );
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DStyleComboBox::~DStyleComboBox()
+{
+}
+
+
+void DStyleComboBox::chooseStyle(const QString &style)
+{
+	QStyle *st = QStyleFactory::create( style );
+	if(st)
+	{
+		qApp->setStyle( st );
+		qApp->setPalette(st->standardPalette());
+	}
+}
+

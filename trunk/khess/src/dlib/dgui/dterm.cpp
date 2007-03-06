@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,56 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include <QtGlobal> 
+#ifdef Q_WS_X11
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include "dterm.h"
+#include <QApplication>
+
+
+DTerm::DTerm(QWidget *w) : QX11EmbedContainer(w)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	m_process = new QProcess(this);
+	
+	connect(m_process, SIGNAL(finished ( int, QProcess::ExitStatus)), this, SLOT(closeTerm(int, QProcess::ExitStatus)));
+	
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DTerm::~DTerm()
+{
+	m_process->kill();
+	m_process->waitForFinished();
+}
+
+QSize DTerm::sizeHint() const
+{
+	QSize size(400,300);
+	
+	return size.expandedTo(QApplication::globalStrut());
+}
+
+void DTerm::showTerm()
+{
+	QStringList args;
+
+	args << QStringList() << "-into" << QString::number(winId()) << "-bg" << palette().color(QPalette::Background).name() << "-fg" << palette().color(QPalette::Foreground).name();
+
+	m_process->start("xterm", args);
+	
+	if( m_process->error() == QProcess::FailedToStart )
+	{
+		qWarning("-> Please install xterm first");
+	}
+}
+
+void DTerm::closeTerm(int ec, QProcess::ExitStatus s)
+{
+	emit termClosed();
+	close();
+}
+
+#endif // Q_WS_X11
+
+

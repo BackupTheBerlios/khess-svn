@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DAPPLICATIONPROPERTIES_H
+#define DAPPLICATIONPROPERTIES_H
+
+#include <QString>
+#include "dglobal.h"
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_CORE_EXPORT DApplicationProperties
 {
-	Q_OBJECT
+	protected:
+		DApplicationProperties();
+		virtual ~DApplicationProperties();
+		
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		void setDataDir(const QString &v);
+		void setHomeDir(const QString &v);
+		void setThemeDir(const QString &v);
+		void setCacheDir(const QString &v);
+		void setVersion(const QString &v);
 		
-		KConfig *config(const QString &group = "General");
 		
+		virtual QString dataDir() const;
+		virtual QString homeDir() const;
+		virtual QString themeDir() const;
+		virtual QString configDir() const;
+		virtual QString cacheDir() const;
+		virtual QString version() const;
+		
+		static DApplicationProperties *instance();
+		
+	private:
+		static DApplicationProperties *s_instance;
+		
+		QString m_homeDir;
+		QString m_dataDir;
+		QString m_themeDir;
+		QString m_version;
+		QString m_cacheDir;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
+#define dAppProp DApplicationProperties::instance()
 
 #endif

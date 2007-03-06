@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DSTACKEDMAINWINDOW_H
+#define DSTACKEDMAINWINDOW_H
+
+#include <dmainwindow.h>
+
+#include <QHash>
+
+class QStackedWidget;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_IDEAL_EXPORT DStackedMainWindow : public DMainWindow
 {
-	Q_OBJECT
+	Q_OBJECT;
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DStackedMainWindow(QWidget *parent = 0);
+		~DStackedMainWindow();
+		void addWidget(QWidget *widget, int perspective = DefaultPerspective);
+		void removeWidget(QWidget *widget);
 		
-		KConfig *config(const QString &group = "General");
+	private slots:
+		void setupPerspective(int perspective);
 		
+	private:
+		QStackedWidget *m_stack;
+		QHash<int, QWidget *> m_widgets;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

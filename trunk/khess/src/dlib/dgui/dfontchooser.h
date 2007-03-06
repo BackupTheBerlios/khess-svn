@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,41 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DFONTCHOOSER_H
+#define DFONTCHOOSER_H
+
+#include <QFrame>
+#include <dcore/dglobal.h>
+
+class QComboBox;
+class QFontComboBox;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DFontChooser : public QFrame
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DFontChooser(QWidget *parent = 0);
+		~DFontChooser();
+		void setCurrentFont(const QFont &font);
+		QFont currentFont() const;
 		
-		KConfig *config(const QString &group = "General");
+	signals:
+		void fontChanged();
 		
+	private slots:
+		void emitFontChanged(int = 0);
+		void loadFontInfo(const QFont &newFont);
+		
+	private:
+		QFontComboBox *m_families;
+		QComboBox *m_fontStyle;
+		QComboBox *m_fontSize;
+		
+		QFont m_currentFont;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

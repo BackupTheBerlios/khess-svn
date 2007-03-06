@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,51 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DXYSPINBOX_H
+#define DXYSPINBOX_H
+
+#include <QGroupBox>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QLabel>
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DXYSpinBox : public QGroupBox
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DXYSpinBox(const QString &title, QWidget *parent = 0);
+		~DXYSpinBox();
+		void setSingleStep(double step);
+		void setMinimum ( double min);
+		void setMaximum ( double max);
+		void setX(double x);
+		void setY(double y);
+		double x();
+		double y();
+		void setModifyTogether(bool enable);
 		
-		KConfig *config(const QString &group = "General");
+	private slots:
+		void updateXValue(double v);
+		void updateYValue(double v);
+		void toggleModify();
 		
+	private:
+		QLabel *m_textX, *m_textY;
+	
+		QDoubleSpinBox *m_x, *m_y;
+		QPushButton *m_separator;
+		
+		bool m_modifyTogether;
+		
+	signals:
+		void valueXChanged(double );
+		void valueYChanged(double );
+		void valueXYChanged(double, double);
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

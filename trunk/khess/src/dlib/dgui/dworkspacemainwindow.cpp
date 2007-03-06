@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dworkspacemainwindow.h"
+#include <QWorkspace>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+DWorkspaceMainWindow::DWorkspaceMainWindow(QWidget *parent) : DMainWindow(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	m_workspace = new QWorkspace;
+	
+	setCentralWidget( m_workspace );
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DWorkspaceMainWindow::~DWorkspaceMainWindow()
+{
+}
+
+void DWorkspaceMainWindow::addWidget(QWidget *widget, int perspective)
+{
+	addToPerspective( widget, perspective );
+	
+	m_workspace->addWindow(widget);
+	widget->show();
+}
+
+void DWorkspaceMainWindow::removeWidget(QWidget *widget)
+{
+	removeFromPerspective( widget );
+	
+	widget->setParent(0);
+}
+

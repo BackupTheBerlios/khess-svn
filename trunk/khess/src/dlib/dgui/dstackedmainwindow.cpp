@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dstackedmainwindow.h"
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+#include <QStackedWidget>
+
+DStackedMainWindow::DStackedMainWindow(QWidget *parent) : DMainWindow(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	m_stack = new QStackedWidget;
+	setCentralWidget( m_stack );
+	
+	connect(this, SIGNAL(perspectiveChanged( int )), this, SLOT(setupPerspective(int)));
+}
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DStackedMainWindow::~DStackedMainWindow()
+{
+}
+
+void DStackedMainWindow::addWidget(QWidget *widget, int perspective)
+{
+	if ( m_widgets.contains( perspective ) ) return;
+	
+	m_widgets.insert(perspective, widget);
+	
+	m_stack->addWidget(widget);
+}
+
+void DStackedMainWindow::removeWidget(QWidget *widget)
+{
+	m_stack->removeWidget(widget);
+	
+	m_widgets.remove( m_widgets.key(widget) );
+}
+
+void DStackedMainWindow::setupPerspective(int perspective)
+{
+	if ( m_widgets.contains(perspective) )
+	{
+		QWidget *w = m_widgets[perspective];
+		m_stack->setCurrentWidget(w);
+	}
+}
+
+

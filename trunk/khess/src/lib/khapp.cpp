@@ -20,8 +20,8 @@
 #include "khapp.h"
 #include <kconfig.h>
 
-KHApp::KHApp()
- : KApplication()
+KHApp::KHApp(int &argc, char **argv)
+ : QApplication(argc, argv)
 {
 }
 

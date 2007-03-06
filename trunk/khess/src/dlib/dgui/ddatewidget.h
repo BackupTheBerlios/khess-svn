@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DDATEWIDGET_H
+#define DDATEWIDGET_H
+
+#include <qwidget.h>
+#include <QDate>
+#include "dcore/dglobal.h"
+
+class QComboBox;
+class QSpinBox;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DDateWidget : public QWidget
 {
-	Q_OBJECT
+	Q_OBJECT;
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DDateWidget(QWidget *parent = 0);
+		DDateWidget(const QDate &date, QWidget *parent = 0);
+		~DDateWidget();
 		
-		KConfig *config(const QString &group = "General");
+		void setDate(const QDate &date);
+		QDate date() const;
 		
+	private:
+		void init(const QDate &date);
+		
+	private slots:
+		void updateDateValues(int);
+		
+	private:
+		QDate m_date;
+		
+		QSpinBox *m_day, *m_year;
+		QComboBox *m_mounth;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

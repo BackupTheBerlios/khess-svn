@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@toonka.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,61 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
+#include "dfortunegenerator.h"
 
-#include <kapplication.h>
+#include <QProcess>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+DFortuneGenerator *DFortuneGenerator::s_self = 0;
+
+struct DFortuneGenerator::Private
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
+	bool isValid;
+	QString fortunePath;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
 
-#endif
+DFortuneGenerator::DFortuneGenerator() : d(new Private())
+{
+	findFortunePath();
+}
+
+
+DFortuneGenerator::~DFortuneGenerator()
+{
+	delete d;
+}
+
+DFortuneGenerator *DFortuneGenerator::self()
+{
+	if ( !s_self )
+		s_self = new DFortuneGenerator;
+	
+	return s_self;
+}
+
+void DFortuneGenerator::findFortunePath()
+{
+	d->fortunePath = "fortune";
+	if ( QProcess::execute(d->fortunePath) == 0 )
+	{
+		d->isValid = true;
+	}
+	else
+	{
+		d->isValid = false;
+	}
+}
+
+QString DFortuneGenerator::generate()
+{
+	if ( !d->isValid )
+		return "";
+	
+	QProcess proc;
+	proc.start(d->fortunePath);
+	
+	proc.waitForFinished();
+	
+	return proc.readAllStandardOutput();
+}
+

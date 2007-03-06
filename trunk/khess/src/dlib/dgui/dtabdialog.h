@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,65 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTABDIALOG_H
+#define DTABDIALOG_H
+
+#include <QDialog>
+#include "dgui/dtabwidget.h"
+
+#include <QHash>
+
+typedef QHash<int, QPushButton *> Buttons;
+
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DTabDialog : public QDialog
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		enum Button
+		{
+			Help    = 1<<2,
+			Ok      = 1<<3,
+			Apply   = 1<<4,
+			Cancel  = 1<<5,
+			Custom1 = 1<<6,
+			Custom2 = 1<<7,
+			Custom3 = 1<<8
+		};
+		DTabDialog(QWidget *parent = 0, bool modal = true);
+		DTabDialog(int buttons = Ok|Cancel, QWidget *parent = 0, bool modal = true);
 		
-		KConfig *config(const QString &group = "General");
+		~DTabDialog();
 		
+		void addTab ( QWidget * child, const QString & label );
+		void addTab ( QWidget * child, const QIcon & iconset, const QString & label );
+		
+		QWidget *currentTab();
+		
+		void setButtonText(Button b, const QString &text);
+		QPushButton *button(Button b);
+		
+		DTabWidget *tabWidget() const;
+		
+	private:
+		void setupButtons(int buttons);
+		
+	public slots:
+		virtual void ok();
+		virtual void cancel();
+		virtual void apply();
+		virtual void help(){};
+		virtual void custom1() {};
+		virtual void custom2() {};
+		virtual void custom3() {};
+		
+	private:
+		DTabWidget *m_tabWidget;
+		Buttons m_buttons;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

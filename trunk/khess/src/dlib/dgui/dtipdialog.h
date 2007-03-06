@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,46 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTIP_H
+#define DTIP_H
+
+#include <QString>
+#include <QList>
+#include <QDialog>
+#include <dcore/dglobal.h>
+
+#include "dtipdatabase.h"
+
+class QCheckBox;
+class QTextBrowser;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
-{
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+ * @class DTipDialog
+ * @author David Cuadrado <krawek@gmail.com>
+ */
 
-#define khapp static_cast<KHApp*>(kapp)
+class D_GUI_EXPORT DTipDialog : public QDialog
+{
+	Q_OBJECT;
+	public:
+		DTipDialog(const QString &file, QWidget *parent = 0);
+		DTipDialog(DTipDatabase *database, QWidget *parent = 0);
+		~DTipDialog();
+		
+	private:
+		void setupGUI();
+		
+	private slots:
+		void showPrevTip();
+		void showNextTip();
+		
+		void setShowOnStart();
+		
+	private:
+		QTextBrowser *m_textArea;
+		QCheckBox *m_showOnStart;
+		DTipDatabase *m_database;
+};
 
 #endif

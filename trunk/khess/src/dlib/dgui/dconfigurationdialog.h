@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,40 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+
+#ifndef DCONFIGURATIONDIALOG_H
+#define DCONFIGURATIONDIALOG_H
+
+#include <QDialog>
+#include <QMap>
+#include <QButtonGroup>
+
+#include "dgui/dwidgetlistview.h"
+#include "dgui/dflatbutton.h"
+
+#include "dgui/dpagedialog.h"
+#include "dcore/dglobal.h"
+
+class QStackedWidget;
+class QTreeWidget;
+class QTableWidgetItem;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+
+class D_GUI_EXPORT DConfigurationDialog : public DPageDialog
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DConfigurationDialog(QWidget *parent = 0);
+		~DConfigurationDialog();
 		
-		KConfig *config(const QString &group = "General");
-		
+	public slots:
+		virtual void ok();
+		virtual void cancel();
+		virtual void apply();
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

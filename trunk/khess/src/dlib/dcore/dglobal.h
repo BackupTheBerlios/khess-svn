@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
-{
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+#ifndef DGLOBAL_H
+#define DGLOBAL_H
 
-#define khapp static_cast<KHApp*>(kapp)
+#if defined(QT_SHARED) || defined(QT_PLUGIN)
+# define D_GUI_EXPORT Q_GUI_EXPORT
+# define D_CORE_EXPORT Q_DECL_EXPORT
+# define D_SOUND_EXPORT Q_DECL_EXPORT
+#else
+# define D_GUI_EXPORT
+# define D_CORE_EXPORT
+# define D_SOUND_EXPORT
+#endif
+
+
+#include "dapplicationproperties.h"
+
+#define DATA_DIR dAppProp->dataDir()
+#define THEME_DIR dAppProp->themeDir()
+#define HOME_DIR dAppProp->homeDir()
+#define CONFIG_DIR dAppProp->configDir()
+
+#define CACHE_DIR dAppProp->cacheDir()
+
 
 #endif
+
+
+

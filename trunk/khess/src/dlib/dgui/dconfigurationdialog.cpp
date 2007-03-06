@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,57 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#include "dconfigurationdialog.h"
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QStackedWidget>
+#include <QLabel>
+#include <QHeaderView>
 
-/**
-	@author David Cuadrado - <krawek@gmail.com>
-*/
-class KHApp : public KApplication
+
+#include "dseparator.h"
+
+#include "ddebug.h"
+
+DConfigurationDialog::DConfigurationDialog(QWidget *parent) : DPageDialog(parent)
 {
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
+	setFaceType( DPageDialog::Tree );
 
-#define khapp static_cast<KHApp*>(kapp)
+	QHBoxLayout *buttonLayout = new QHBoxLayout;
+	buttonLayout->addStretch(1);
+	
+	QPushButton *applyButton = new QPushButton(tr("Apply"));
+	connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+	buttonLayout->addWidget(applyButton);
+	
+	QPushButton *okButton = new QPushButton(tr("OK"));
+	connect(okButton, SIGNAL(clicked()), this, SLOT(ok()));
+	buttonLayout->addWidget(okButton);
+	
+	QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+	connect(cancelButton, SIGNAL(clicked()), this, SLOT(cancel()));
+	buttonLayout->addWidget(cancelButton);
+	
+	static_cast<QBoxLayout *>(layout())->addLayout(buttonLayout);
+}
 
-#endif
+
+DConfigurationDialog::~DConfigurationDialog()
+{
+}
+
+void DConfigurationDialog::ok()
+{
+	accept();
+}
+
+void DConfigurationDialog::cancel()
+{
+	reject();
+}
+
+void DConfigurationDialog::apply()
+{
+}

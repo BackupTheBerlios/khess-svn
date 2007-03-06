@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,29 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DMAINWINDOWABSTRACTSETTINGS_H
+#define DMAINWINDOWABSTRACTSETTINGS_H
+
+#include <QObject>
+#include <dideality.h>
+
+class DToolView;
+class DMainWindow;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+
+class D_IDEAL_EXPORT DMainWindowAbstractSettings : public QObject
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DMainWindowAbstractSettings(QObject *parent = 0) : QObject(parent) {}
+		~DMainWindowAbstractSettings() {};
 		
-		KConfig *config(const QString &group = "General");
+		virtual void save(DMainWindow *w) = 0;
+		virtual void restore(DMainWindow *w) = 0;
 		
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

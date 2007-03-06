@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DSPELLINTERFACE_H
+#define DSPELLINTERFACE_H
+
+#include <QString>
+#include <QStringList>
+#include "dcore/dglobal.h"
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @if english
+ * Abstract class that define a interface for spell programs, such as aspell, ispell, pspell
+ * @elseif spanish
+ * Clase abstracta que define una interfaz para programas de ortografia
+ * @endif
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_CORE_EXPORT DSpellInterface
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		virtual ~DSpellInterface() {}
+		/**
+		 * @if english
+		 * This function must check if a word is right
+		 * @elseif spanish
+		 * Esta funcion debe chequear si una palabra es correcta
+		 * @endif
+		 * @param word 
+		 * @return 
+		 */
+		virtual bool checkWord(const QString &word) = 0;
 		
-		KConfig *config(const QString &group = "General");
-		
+		/**
+		 * @if english
+		 * This function must return a list of suggestion
+		 * @elseif spanish
+		 * Esta funcion debe retorna una lista de sugerencias
+		 * @endif
+		 * @param word 
+		 * @return 
+		 */
+		virtual QStringList suggestions(const QString &word) = 0;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,70 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+
+#ifndef ASPELLIFACE_H
+#define ASPELLIFACE_H
+
+#ifdef HAVE_ASPELL
+
+#include <QStringList>
+#include <QString>
+
+#include "dcore/dspellinterface.h"
+#include "dglobal.h"
+
+struct AspellSpeller;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @if english
+ * 
+ * @elseif spanish
+ * Interfaz para aspell
+ * @endif
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_CORE_EXPORT DAspellChecker : public DSpellInterface
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		/**
+		 * @if english
+		 * Translate
+		 * @endif
+		 * @if spanish
+		 * Constructor por defecto
+		 * @endif
+		 */
+		DAspellChecker();
 		
-		KConfig *config(const QString &group = "General");
+		/**
+		 * @if english
+		 * Destructor
+		 * @endif
+		 * @if spanish
+		 * Destructor
+		 * @endif
+		 */
+		virtual ~DAspellChecker();
 		
+		/**
+		 * Reimplementado de DDSpellInterface, esta funcion verifica si una palabra esta bien escrita
+		 */
+		bool checkWord(const QString &word);
+		
+		/**
+		 * Retorna una lista de palabras sugeridas para una palabra mal escrita
+		 */
+		QStringList suggestions(const QString &word);
+		
+	private:
+		bool init();
+		
+	private:
+		AspellSpeller *m_speller;
 };
 
-#define khapp static_cast<KHApp*>(kapp)
-
 #endif
+
+#endif // HAVE_ASPELL
+

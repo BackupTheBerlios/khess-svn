@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,26 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DMAINWINDOWFACTORY_H
+#define DMAINWINDOWFACTORY_H
+
+#include <dideality.h>
+
+class DMainWindow;
+class QMainWindow;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * This class creates a DMainWindow from other QMainWindow
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_IDEAL_EXPORT DMainWindowFactory
 {
-	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DMainWindowFactory();
+		~DMainWindowFactory();
 		
-		KConfig *config(const QString &group = "General");
-		
+		static DMainWindow *create(QMainWindow *other);
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

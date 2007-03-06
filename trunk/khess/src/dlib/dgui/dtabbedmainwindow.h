@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTABBEDMAINWINDOW_H
+#define DTABBEDMAINWINDOW_H
+
+#include <dmainwindow.h>
+
+class QTabWidget;
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * A tabbed main window.
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_IDEAL_EXPORT DTabbedMainWindow : public DMainWindow
 {
-	Q_OBJECT
+	Q_OBJECT;
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DTabbedMainWindow(QWidget *parent = 0);
+		~DTabbedMainWindow();
 		
-		KConfig *config(const QString &group = "General");
+		void addWidget(QWidget *widget, bool persistant = false, int perspective = DefaultPerspective);
+		void removeWidget(QWidget *widget, bool force = false);
+		void setTabWidget(QTabWidget *w);
+		QTabWidget *tabWidget() const;
 		
+	protected:
+		virtual void setupTabWidget(QTabWidget *w);
+		
+	protected slots:
+		void closeCurrentTab();
+		virtual void setupPerspective(int wps);
+		
+	signals:
+		void widgetChanged(QWidget *widget);
+		
+	private slots:
+		void emitWidgetChanged(int index);
+		
+	private:
+		QTabWidget *m_tabWidget;
+		QWidgetList m_persistantWidgets;
+		QHash<QWidget *, int> m_tabs;
+		
+		QWidgetList m_pages;
 };
-
-#define khapp static_cast<KHApp*>(kapp)
 
 #endif

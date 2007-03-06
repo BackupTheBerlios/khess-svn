@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,56 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DALGORITHM_H
+#define DALGORITHM_H
+
+#include <QString>
+#include <QColor>
+
+#include "dglobal.h"
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * Class that contains generic useful algorithms
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
-{
-	Q_OBJECT
-	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
-		
-		KConfig *config(const QString &group = "General");
-		
-};
 
-#define khapp static_cast<KHApp*>(kapp)
+class D_CORE_EXPORT DAlgorithm
+{
+	public:
+// 		DAlgorithm();
+// 		~DAlgorithm();
+		/**
+		 * @if english
+		 * Returns a random integer
+		 * @elseif spanish
+		 * Retorna una entero aleatorio
+		 * @endif
+		 * @return 
+		 */
+		static int random();
+		/**
+		 * @if english
+		 * Returns an random string, this may be useful for example temporaly files
+		 * @elseif spanish
+		 * Retorna una cadena de caracteres aleatoria, esta funcion puede ser muy util por ejemplo para archivos temporales
+		 * @endif
+		 * @param length 
+		 * @return 
+		 */
+		static QString randomString(int length);
+		
+		/**
+		 * @if english
+		 * Returns a random color
+		 * @elseif spanish
+		 * Retorna un color aleatorio
+		 * @endif
+		 * 
+		 * @param withAlpha 
+		 * @return 
+		 */
+		static QColor randomColor(bool withAlpha = false);
+};
 
 #endif

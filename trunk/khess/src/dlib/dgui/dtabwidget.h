@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado -  krawek@gmail.com              *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                          	   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,25 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef KHAPP_H
-#define KHAPP_H
 
-#include <kapplication.h>
+#ifndef DTABWIDGET_H
+#define DTABWIDGET_H
+
+#include <QTabWidget>
+#include <dcore/dglobal.h>
 
 /**
-	@author David Cuadrado - <krawek@gmail.com>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHApp : public KApplication
+class D_GUI_EXPORT DTabWidget : public QTabWidget
 {
 	Q_OBJECT
 	public:
-		KHApp(int &argc, char **argv);
-		~KHApp();
+		DTabWidget(QWidget *parent = 0);
+		~DTabWidget();
 		
-		KConfig *config(const QString &group = "General");
+	public slots:
+		void removeAllTabs();
 		
-};
+	protected:
+#ifndef QT_NO_WHEELEVENT
+    		virtual void wheelEvent( QWheelEvent *e );
+#endif
 
-#define khapp static_cast<KHApp*>(kapp)
+	protected slots:
+#ifndef QT_NO_WHEELEVENT
+    		virtual void wheelMove( int delta );
+#endif
+
+};
 
 #endif
