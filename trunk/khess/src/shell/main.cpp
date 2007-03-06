@@ -21,22 +21,8 @@
 
 #include "khess.h"
 #include <khapp.h>
-#include <dcopclient.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-#include <klocale.h>
 
 #include <qregexp.h>
-
-static const char description[] = I18N_NOOP("A KDE Chess Application"); 
-
-static const char version[] = "0.1";
-
-static KCmdLineOptions options[] =
-{
-	{ "+[URL]", I18N_NOOP( "Document to open" ), 0 },
-	KCmdLineLastOption
-};
 
 
 int main(int argc, char **argv)
