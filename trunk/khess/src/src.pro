@@ -1,4 +1,4 @@
-SUBDIRS += dlib lib game modules shell
+SUBDIRS += dlib lib game board modules shell
 TEMPLATE = subdirs 
 CONFIG += warn_on \
           qt \

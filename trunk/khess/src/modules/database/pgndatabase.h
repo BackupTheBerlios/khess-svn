@@ -63,11 +63,11 @@ class PgnDatabase : public Database
 		
 		//game retrieval & storage
 		/** Loads a game from the given position, returns true if successful */
-		bool load(int index, Game& game);
+		bool load(int index, Game::Game& game);
 		/** Saves a game at the given position, returns true if successful */
-		bool save(int index, Game& game);
+		bool save(int index, Game::Game& game);
 		/** Adds a game to the database */
-		bool add(Game& game);
+		bool add(Game::Game& game);
 		/** Removes a game from the database */
 		bool remove(int index);
 		/** Removes multiple games from the database as specified by the filter */
@@ -92,7 +92,7 @@ class PgnDatabase : public Database
 		/** Returns move statistics for the given line */
 		MoveStatList moveStats(const MoveList& line);
 
-		bool loadHeaders(int index, Game& game);
+		bool loadHeaders(int index, Game::Game& game);
 		
 	private:
 		/** Resets/initialises important member variables. Called by constructor and close methods */
@@ -126,15 +126,15 @@ class PgnDatabase : public Database
 		
 		//parsing methods
 		/** Reads tags from the file and adds them to the game. Performs tag searches if any are active */
-		void parseTags(Game* game);
+		void parseTags(Game::Game* game);
 		/** Reads moves from the file and adds them to the game. Performs position searches if any are active */
-		void parseMoves(Game* game);
+		void parseMoves(Game::Game* game);
 		/** Parses a line from the file */
-		void parseLine(Game* game);
+		void parseLine(Game::Game* game);
 		/** Parses a token from the file */
-		void parseToken(Game* game, QString token);
+		void parseToken(Game::Game* game, QString token);
 		/** Parses a comment from the file */
-		void parseComment(Game* game);
+		void parseComment(Game::Game* game);
 		/** Skips past any data which is not valid tag or move data */
 		void readJunk();
 		/** Skips past any tag data */
@@ -146,11 +146,11 @@ class PgnDatabase : public Database
 
 		//output methods
 		/** Writes out the tags from the given game to the file */
-		void writeTags(const Game& game);
+		void writeTags(const Game::Game& game);
 		/** Writes out the move data from the given game to the file */
-		void writeMoves(Game& game);
+		void writeMoves(Game::Game& game);
 		/** Writes out current variation from the given game to the file */
-		void writeVariation(Game& game);
+		void writeVariation(Game::Game& game);
 		
 		//file variables
 		bool m_isOpen;

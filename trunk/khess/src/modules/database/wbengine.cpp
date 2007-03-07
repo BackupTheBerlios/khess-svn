@@ -25,7 +25,7 @@ WBEngine::WBEngine(const QString& name, const QString& command,
 	m_featureTimer = 0;
 }
 
-bool WBEngine::startAnalysis(const Board& board)
+bool WBEngine::startAnalysis(const Game::Board& board)
 {
 	if(!m_analyze || !isActive()) {
 		return false;
@@ -205,7 +205,7 @@ void WBEngine::parseAnalysis(const QString& message)
 	}
 	
 	//Variation
-	Board board = m_board;
+	Game::Board board = m_board;
 	QString sanMove;
 	int section = 4;
 	while((sanMove = trimmed.section(' ', section, section)) != "") {
@@ -214,7 +214,7 @@ void WBEngine::parseAnalysis(const QString& message)
 		}
 		if(!sanMove.endsWith(".")) {
 			qWarning("! move: |%s|", sanMove.toLatin1().constData());
-			Move move = board.singleMove(sanMove);
+			Game::Move move = board.singleMove(sanMove);
 			if(!move.isValid()) {
 				qWarning("Variation parsing failed\n");
 				break;

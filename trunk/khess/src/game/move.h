@@ -20,6 +20,8 @@
 
 #include "common.h"
 
+namespace Game {
+
 class Board;
 
 /** @ingroup Database     
@@ -86,5 +88,7 @@ private:
   Square m_from, m_to;
   MoveType m_type;
 };
+
+}
 
 #endif // __MOVE_H__

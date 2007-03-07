@@ -20,6 +20,8 @@
 
 #include <QString>
 
+namespace Game {
+
 typedef unsigned char Square;
 typedef unsigned char Coord;
 
@@ -61,6 +63,8 @@ bool isPieceColor(Piece piece, Color color);
 Color oppositeColor(Color c);
 /** Returns a string representation of a result */
 QString resultString(Result result);
+
+}
 
 #endif
 

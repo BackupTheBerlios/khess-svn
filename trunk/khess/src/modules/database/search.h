@@ -66,7 +66,7 @@ public:
   /** Empty constructor. */
   PositionSearch();
   /** Standard constructor. */
-  PositionSearch(const Board& position);
+  PositionSearch(const Game::Board& position);
   /** Object cloning - probably obsolete. */
   virtual PositionSearch *clone() const;
   /** Standard destructor. */
@@ -74,11 +74,11 @@ public:
   /** Type - probably obsolete. */
   virtual Search::Type type() const;
   /** @return sought position. */
-  Board position() const;
+  Game::Board position() const;
   /** Sets sought position. */
-  void setPosition(const Board & position);
+  void setPosition(const Game::Board & position);
 private:
-  Board m_position;
+  Game::Board m_position;
 };
 
 /** @ingroup Database

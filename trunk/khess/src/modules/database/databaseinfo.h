@@ -21,7 +21,10 @@
 
 class Database;
 class Filter;
+
+namespace Game {
 class Game;
+}
 
 /** @ingroup Database 
 The DatabaseInfo class is a simple class to keep various database-related
@@ -40,18 +43,18 @@ public:
   Database* database()  {return m_database;}
   /** @return current filter */
   Filter* filter()  {return m_filter;}
-  /** @return current game  */
-  Game* currentGame() {return m_game;}
-  /** @return index of current game  */
+  /** @return current Game::Game  */
+  Game::Game* currentGame() {return m_game;}
+  /** @return index of current Game::Game  */
   int currentIndex() const   {return m_index;}
-  /** Load game @p index */
+  /** Load Game::Game @p index */
   bool loadGame(int index);
   /** Database name */
   QString name() const;
 private:
   Database* m_database;
   Filter* m_filter;
-  Game* m_game;
+  Game::Game* m_game;
   int m_index;
 };
 

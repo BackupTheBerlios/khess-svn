@@ -107,7 +107,7 @@ void PgnDatabase::close()
 	initialise();
 }
 
-bool PgnDatabase::load(int index, Game& game)
+bool PgnDatabase::load(int index, Game::Game& game)
 {
 	if(!m_isOpen || index >= m_count) {
 		return false;
@@ -118,7 +118,7 @@ bool PgnDatabase::load(int index, Game& game)
 	seekGame(index);
 	parseTags(&game);
 	if(game.tag("FEN") != QString::null) {
-		Board board;
+		Game::Board board;
 		board.fromFEN(game.tag("FEN"));
 		game.setStartBoard(board);
 	}
@@ -127,7 +127,7 @@ bool PgnDatabase::load(int index, Game& game)
 	return m_variation != -1;
 }
 
-bool PgnDatabase::save(int index, Game& game)
+bool PgnDatabase::save(int index, Game::Game& game)
 {
 	if(!m_isOpen || index >= m_count) {
 		return false;
@@ -148,7 +148,7 @@ bool PgnDatabase::save(int index, Game& game)
 	return finishCopy();
 }
 
-bool PgnDatabase::add(Game& game)
+bool PgnDatabase::add(Game::Game& game)
 {
 	if(!m_isOpen) {
 		return false;
@@ -251,7 +251,7 @@ PgnDatabase::MoveStatList PgnDatabase::moveStats(const MoveList& line)
 	}
 	
    //locate any cached results that can be used
-	Board board;
+	Game::Board board;
    int ply = 0;
 	quint64 key = 0;
    int closestPly = 0;
@@ -289,7 +289,7 @@ PgnDatabase::MoveStatList PgnDatabase::moveStats(const MoveList& line)
       filter = Filter(m_moveStatCache.object(closestKey)->bitFilter);
    }
    filter.setDatabase(this);
-   Game game;
+   Game::Game game;
    
    for(MoveList::ConstIterator it = line.constBegin(); it != line.constEnd(); ++it) {
       game.addMove(*it);
@@ -485,7 +485,7 @@ void PgnDatabase::seekGame(int index)
 	m_currentLine = QString(m_charLine).trimmed();
 }
 
-void PgnDatabase::parseTags(Game* game)
+void PgnDatabase::parseTags(Game::Game* game)
 {
 	
 	do {
@@ -560,13 +560,13 @@ void PgnDatabase::parseTagsIntoIndex()
       } else if (tag == "Result") {
          m_tags.add(Tags::Result,value);
          if (value == "1-0") {
-            m_index.gameIndex(gameId).setResult(WhiteWin);
+            m_index.gameIndex(gameId).setResult(Game::WhiteWin);
          } else if (value == "0-1") {
-            m_index.gameIndex(gameId).setResult(BlackWin);
+            m_index.gameIndex(gameId).setResult(Game::BlackWin);
          } else if (value == "1/2-1/2") {
-            m_index.gameIndex(gameId).setResult(Draw);
+            m_index.gameIndex(gameId).setResult(Game::Draw);
          } else if (value == "*") {
-            m_index.gameIndex(gameId).setResult(Unknown);
+            m_index.gameIndex(gameId).setResult(Game::Unknown);
          }
       } else if (tag == "WhiteElo") {
          m_tags.add(Tags::PlayerElo,value);
@@ -591,7 +591,7 @@ void PgnDatabase::parseTagsIntoIndex()
 	}
 }
 
-void PgnDatabase::parseMoves(Game* game)
+void PgnDatabase::parseMoves(Game::Game* game)
 {
 	m_gameOver = false;
 	m_inComment = false;
@@ -634,7 +634,7 @@ void PgnDatabase::parseMoves(Game* game)
   }
 }
 
-void PgnDatabase::parseLine(Game* game)
+void PgnDatabase::parseLine(Game::Game* game)
 {
 	QStringList list = m_currentLine.split(" ");
 	m_pos = 0;
@@ -654,7 +654,7 @@ void PgnDatabase::parseLine(Game* game)
   }
 }
 
-void PgnDatabase::parseToken(Game* game, QString token)
+void PgnDatabase::parseToken(Game::Game* game, QString token)
 {
 	switch(token.at(0).toLatin1()) {
 		case '(':
@@ -725,7 +725,7 @@ void PgnDatabase::parseToken(Game* game, QString token)
 			}
 			break;
 		case '*':
-			game->setResult(Unknown);
+			game->setResult(Game::Unknown);
 			m_gameOver = true;
 			
 			// position search on last position
@@ -742,7 +742,7 @@ void PgnDatabase::parseToken(Game* game, QString token)
 			break;
 		case '1':
 			if(token == "1-0") {
-				game->setResult(WhiteWin);
+				game->setResult(Game::WhiteWin);
 				m_gameOver = true;
 				// position search on last position
 				if(m_searchGame) {
@@ -757,7 +757,7 @@ void PgnDatabase::parseToken(Game* game, QString token)
 				}
 				break;
 			} else if(token == "1/2-1/2") {
-				game->setResult(Draw);
+				game->setResult(Game::Draw);
 				m_gameOver = true;
 				// position search on last position
 				if(m_searchGame) {
@@ -775,7 +775,7 @@ void PgnDatabase::parseToken(Game* game, QString token)
 			
 		case '0':
 			if(token == "0-1") {
-				game->setResult(BlackWin);
+				game->setResult(Game::BlackWin);
 				m_gameOver = true;
 				// position search on last position
 				if(m_searchGame) {
@@ -842,7 +842,7 @@ void PgnDatabase::parseToken(Game* game, QString token)
 	}
 }
 
-void PgnDatabase::parseComment(Game* game)
+void PgnDatabase::parseComment(Game::Game* game)
 {
 	int end = m_currentLine.indexOf('}'); 
   
@@ -889,7 +889,7 @@ void PgnDatabase::readMoves()
 	}
 }
 
-void PgnDatabase::writeTags(const Game& game)
+void PgnDatabase::writeTags(const Game::Game& game)
 {
 	*m_newStream << "[Event \"" + game.tag("Event") + "\"]" << endl;
 	*m_newStream << "[Site \"" + game.tag("Site") + "\"]" << endl;
@@ -900,7 +900,7 @@ void PgnDatabase::writeTags(const Game& game)
 	*m_newStream << "[Result \"" + resultString(game.result()) + "\"]" << endl;
 	
 	//add FEN string if non-standard start position
-	Board standardPosition;
+	Game::Board standardPosition;
 	standardPosition.setStandardPosition();
 	if(game.startBoard() != standardPosition) {
 		*m_newStream << "[FEN \"" + game.startBoard().toFEN() + "\"]" << endl;
@@ -909,7 +909,7 @@ void PgnDatabase::writeTags(const Game& game)
 	*m_newStream << endl;
 }
 
-void PgnDatabase::writeMoves(Game& game)
+void PgnDatabase::writeMoves(Game::Game& game)
 {
 	//write move text to one long string
 	game.moveToStart();
@@ -934,7 +934,7 @@ void PgnDatabase::writeMoves(Game& game)
 	*m_newStream << endl;
 }
 
-void PgnDatabase::writeVariation(Game& game)
+void PgnDatabase::writeVariation(Game::Game& game)
 {
 	bool commentEnded = true;
 	bool variationEnded = false;
@@ -1073,7 +1073,7 @@ void PgnDatabase::finalizeSearch()
 void PgnDatabase::searchGame(int index)
 {
 
-   Game game;
+   Game::Game game;
    
    if((m_externalFilter->state() == TriStateTree::Unknown) && m_searchIndex) {
       loadHeaders(index,game);
@@ -1089,7 +1089,7 @@ void PgnDatabase::searchGame(int index)
    
 }
 
-bool PgnDatabase::loadHeaders(int index, Game& game)
+bool PgnDatabase::loadHeaders(int index, Game::Game& game)
 {
    //qDebug ("Loading headers for game %d",index);
    if (!m_searching) {

@@ -31,7 +31,7 @@ DatabaseInfo::DatabaseInfo(const QString& fname)
     m_database = new PgnDatabase();
     m_database->open(fname);
   }
-  m_game = new Game;
+  m_game = new Game::Game;
   m_filter = new Filter(m_database);
   m_index = -1;
   loadGame(0);

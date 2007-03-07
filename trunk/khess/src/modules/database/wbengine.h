@@ -36,7 +36,7 @@ class WBEngine : public Engine
 							QTextStream* logStream = NULL);
 		
 		/** Analyses the the given position */
-		bool startAnalysis(const Board& board);
+		bool startAnalysis(const Game::Board& board);
 		
 		/** Stops any analysis */
 		bool stopAnalysis();
@@ -64,7 +64,7 @@ class WBEngine : public Engine
 		/** Processes the feature time out */
 		void timerEvent(QTimerEvent*);
 		
-		Board m_board;
+		Game::Board m_board;
 		
 		bool m_analyze;
 		bool m_setboard;

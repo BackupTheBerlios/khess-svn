@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@gmail.com                                                      *
+ *   Copyright (C) 2007 by Jorge Cuadrado   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,61 +17,57 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#include "boardview.h"
 
-#ifndef KHIMAGEMANAGER_H
-#define KHIMAGEMANAGER_H
+#include <QGraphicsScene>
 
-#include <qobject.h>
-#include <qimage.h>
-#include <qvaluevector.h>
+#include "boarditem.h"
 
-#include <kimageeffect.h>
+#include "pieceitem.h"
 
-/**
-	@author David Cuadrado - Jorge Cuadrado <krawek@gmail.com - kuadrosxx@gmail.com>
-*/
+namespace Board {
 
-class KHImageManager : public QObject
+struct BoardView::Private
 {
-	public:
-		enum Images
-		{
-			Border = 0,
-			BorderLightOn,
-			BorderLightOff,
-			BorderLightOn2,
-			BorderLightOff2,
-			SquareWhite,
-			SquareDark,
-			BlackKing,
-			BlackQueen,
-			BlackBishop,
-			BlackKnight,
-			BlackRook,
-			BlackPawn,
-			WhiteKing,
-			WhiteQueen,
-			WhiteBishop,
-			WhiteKnight,
-			WhiteRook,
-			WhitePawn,
-			Select,
-			Motion,
-			Danger,
-			Background
-		};
-		
-		KHImageManager();
-		~KHImageManager();
-		
-		bool add(Images index, const QImage &img);
-		QImage get(Images index, int size );
-		QImage getWithFade(Images index, int size, float val, const QColor &color );
-		
-	private:
-		QValueVector<QImage> imageVector;
-		
-		
+	BoardItem *boardItem;
 };
 
-#endif
+BoardView::BoardView(QWidget * parent) : QGraphicsView(parent), d(new Private)
+{
+	setAlignment(Qt::AlignCenter);
+	
+	QGraphicsScene *scene = new QGraphicsScene();
+	setScene(scene);
+	
+	d->boardItem = new BoardItem();
+	scene->addItem(d->boardItem);
+	
+	centerOn(d->boardItem->boundingRect().center());
+	setResizeAnchor(QGraphicsView::AnchorViewCenter);
+	
+#if 0
+	PieceItem *pawn = new PieceItem(d->boardItem, 'P');
+	d->boardItem->setPiece(pawn, 0,0);
+	
+	PieceItem *pawn1 = new PieceItem(d->boardItem, 'p');
+	d->boardItem->setPiece(pawn1, 0,1);
+	
+	scene->addItem(pawn);
+	scene->addItem(pawn1);
+#endif 
+}
+
+BoardView::~BoardView()
+{
+	delete d;
+}
+
+void BoardView::setBoard(const Game::Board &board)
+{
+	d->boardItem->setGameBoard(board);
+	update();
+}
+
+}
+
+

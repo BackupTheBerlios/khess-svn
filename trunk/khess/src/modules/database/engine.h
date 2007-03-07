@@ -65,7 +65,7 @@ class Engine : public QObject
 		bool isActive();
 		
 		/** Analyses the the given position */
-		virtual bool startAnalysis(const Board& board) = 0;
+		virtual bool startAnalysis(const Game::Board& board) = 0;
 		
 		/** Stops any analysis */
 		virtual bool stopAnalysis() = 0;

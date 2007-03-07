@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@gmail.com                                                      *
+ *   Copyright (C) 2007 by Jorge Cuadrado   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,49 +17,40 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef BOARDITEM_H
+#define BOARDITEM_H
 
-#ifndef KHBOARDBASE_H
-#define KHBOARDBASE_H
+#include <QGraphicsItem>
 
-// Qt
-#include <qframe.h>
-#include <qpixmapcache.h>
+#include <game/board.h>
 
-#include <cmath>
-#include "khgame.h"
+namespace Board {
 
-#define IMAGE_MAX 144
-#define IMAGE_MIN 32
+class PieceItem;
 
 /**
-	@author David Cuadrado <krawek@gmail.com>
+ * @author Jorge Cuadrado <kuadrosx@zi0n>
 */
 
-class KHBoardBase : public QWidget
+class BoardItem : public QGraphicsItem
 {
-	Q_OBJECT
 	public:
-		KHBoardBase(KHMatch *m = 0, QWidget *parent = 0, const char *name = 0);
-		~KHBoardBase();
+		BoardItem(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
+		~BoardItem();
+		void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget );
+		QRectF boundingRect () const;
 		
-		bool orientation();
-		void setLocalBand( bool );
 		
-		virtual void loadBoardTheme(const QString &name = QString::null) = 0;
-		virtual void loadFiguresTheme(const QString &name = QString::null) = 0;
-		virtual void redrawAll() = 0;
+		void setGameBoard(const Game::Board &board);
+		void setPiece(PieceItem* piece, int row, int col );
 		
-	public slots:
-		virtual void showPromotionDialog();
+		bool reposition(PieceItem* piece);
 		
-	signals:
-		void promoted(QChar c);
-
 	private:
-		bool m_boardOrientation;
-		
-	protected:
-		KHGame *m_game;
+		struct Private;
+		Private * const d;
 };
+
+}
 
 #endif

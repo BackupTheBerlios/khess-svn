@@ -18,6 +18,8 @@
 #include "board.h"
 #include "move.h"
 
+namespace Game {
+
 Move::Move() : m_from(0), m_to(0)
 {
 	m_type = StandardMove;
@@ -151,3 +153,5 @@ bool operator==(const Move& m1, const Move& m2)
   return m1.from() == m2.from() && m1.to() == m2.to() && m1.type() == m2.type();
 }
 
+
+}

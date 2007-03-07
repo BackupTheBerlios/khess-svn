@@ -27,6 +27,8 @@
 #include "partialdate.h"
 #include "nag.h"
 
+namespace Game {
+
 /** @ingroup Database  
    The Game class represents a chess game. Moves and variations can be added
 	 and removed. Moves can have associated comments and nag values. For methods
@@ -242,5 +244,7 @@ private:
   //eco data
   static QMap<quint64,QString> m_ecoPositions;
 };
+
+}
 
 #endif	// __GAME_H__

@@ -18,6 +18,8 @@
 
 #include "history.h"
 
+namespace Game {
+
 HistoryItem::HistoryItem()
 {
 	m_index = 0;
@@ -86,4 +88,6 @@ int HistoryItem::halfMoveClock() const
 void HistoryItem::setHalfMoveClock(int halfMoveClock)
 {
 	m_halfMoveClock = halfMoveClock;
+}
+
 }

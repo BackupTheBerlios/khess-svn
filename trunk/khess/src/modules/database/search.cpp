@@ -51,7 +51,7 @@ PositionSearch::PositionSearch()
 {
 }
 
-PositionSearch::PositionSearch(const Board& position)
+PositionSearch::PositionSearch(const Game::Board& position)
 {
    setPosition(position);
 }
@@ -70,12 +70,12 @@ Search::Type PositionSearch::type() const
    return Search::PositionSearch;
 }
 
-Board PositionSearch::position() const
+Game::Board PositionSearch::position() const
 {
    return m_position;
 }
 
-void PositionSearch::setPosition(const Board& position)
+void PositionSearch::setPosition(const Game::Board& position)
 {
    m_position.fromFEN(position.toFEN());
 }

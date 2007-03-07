@@ -23,6 +23,8 @@
 #include "board.h"
 #include "settings.h"
 
+namespace Game {
+
 static const int castlingMask[64] =
     {
         ~WhiteQueenside,	AllRights, AllRights, AllRights, ~WhiteBothSides,	AllRights, AllRights, ~WhiteKingside,
@@ -2409,3 +2411,4 @@ void Board::enableHashing()
 	}
 }
 
+}

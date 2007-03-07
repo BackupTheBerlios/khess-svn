@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado - krawek@gmail.com               *
+ *   Copyright (C) 2007 by Jorge Cuadrado   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,31 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef PIECEITEM_H
+#define PIECEITEM_H
 
-#ifndef KHPROMOTIONDIALOG_H
-#define KHPROMOTIONDIALOG_H
+#include <QGraphicsSvgItem>
 
-#include <kdialog.h>
-#include <kpushbutton.h>
-#include <qvbox.h>
-#include <qhbuttongroup.h>
+#include <game/common.h>
 
-#include "khimagemanager.h"
+namespace Board {
 
+class BoardItem;
 
 /**
- * @author David Cuadrado <krawek@gmail.com >
+ * @author Jorge Cuadrado <kuadrosx@zi0n>
 */
-class KHPromotionDialog : public KDialog
+class PieceItem : public QGraphicsSvgItem
 {
-	Q_OBJECT
 	public:
-		KHPromotionDialog(KHImageManager *imageManager, bool isWhite, QWidget *parent = 0);
-		~KHPromotionDialog();
+		PieceItem(BoardItem *board, const Game::Piece &type);
+		~PieceItem();
+		
+	protected:
+		void chooseSvg(const Game::Piece &type);
+		void mousePressEvent ( QGraphicsSceneMouseEvent * event );
+		void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
+		QVariant itemChange ( GraphicsItemChange change, const QVariant & value );
 		
 	private:
-		KPushButton *m_rook, *m_knight, *m_bishop, *m_queen;
-		QHButtonGroup *m_buttonGroup;
+		struct Private;
+		Private * const d;
 };
+
+}
 
 #endif

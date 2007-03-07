@@ -54,13 +54,13 @@ class Database
 		
 		//game retrieval & storage
 		/** Loads a game from the given position, returns true if successful */
-		virtual bool load(int index, Game& game) = 0;
+		virtual bool load(int index, Game::Game& game) = 0;
 		/** Loads only the header information into a game from the given position, returns true if successful */
-		virtual bool loadHeaders(int index, Game& game);
+		virtual bool loadHeaders(int index, Game::Game& game);
 		/** Saves a game at the given position, returns true if successful */
-		virtual bool save(int index, Game& game) = 0;
+		virtual bool save(int index, Game::Game& game) = 0;
 		/** Adds a game to the database */
-		virtual bool add(Game& game) = 0;
+		virtual bool add(Game::Game& game) = 0;
 		/** Removes a game from the database */
 		virtual bool remove(int index) = 0;
 		/** Removes multiple games from the database as specified by the filter */
@@ -81,7 +81,7 @@ class Database
 		
 		//move statistics (cf. tree window in Scid)
 		typedef struct {
-			Move move;
+			Game::Move move;
 			QString eco;
 			float frequency;
 		} MoveStat;

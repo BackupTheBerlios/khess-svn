@@ -25,7 +25,7 @@ UCIEngine::UCIEngine(const QString& name, const QString& command,
 	m_quitAfterAnalysis = false;
 }
 											
-bool UCIEngine::startAnalysis(const Board& board)
+bool UCIEngine::startAnalysis(const Game::Board& board)
 {
 	if(!isActive()) {
 		return false;
@@ -182,12 +182,12 @@ void UCIEngine::parseAnalysis(const QString& message)
 		//PV
 		if(name == "pv"){
 		
-			Board board = m_board;
+			Game::Board board = m_board;
 			QString lanMove;
 			section++;
 			while((lanMove = info.section(' ', section, section)) != "") {
 				qWarning("! move: |%s|", lanMove.toLatin1().constData());
-				Move move = board.singleLANMove(lanMove);
+				Game::Move move = board.singleLANMove(lanMove);
 				if(!move.isValid()) {
 					qWarning("Variation parsing failed\n");
 					break;

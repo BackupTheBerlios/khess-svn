@@ -29,6 +29,8 @@
 #include <QString>
 #include <QStack>
 
+namespace Game {
+
 enum {Valid, NoWhiteKing, NoBlackKing, DoubleCheck, OppositeCheck};
 
 /** @ingroup Database  
@@ -173,5 +175,8 @@ private:
    void enableHashing();
 
 };
+
+}
+
 #endif
 

@@ -48,7 +48,7 @@ class IndexItem {
       /** Sets the tag id for the ECO code of the game */
       void setEcoId(quint16 id);
       /** Sets the result of the game */
-      void setResult(Result result);
+      void setResult(Game::Result result);
       /** Sets the round of the game */
       void setRound(quint8 round);
       /** Sets the date of the game */
@@ -70,7 +70,7 @@ class IndexItem {
       /** Returns the round of the game */
       quint8 round();
       /** Returns the result of the game */
-      Result result();
+      Game::Result result();
       /** Returns the date of the game */
       PartialDate date();
 
@@ -89,7 +89,7 @@ class IndexItem {
       quint16 m_whiteElo; // 2 bytes
       quint16 m_blackElo; // 2 bytes
       quint16 m_ecoId; // 2 bytes
-      Result m_result; // 1 bytes
+      Game::Result m_result; // 1 bytes
       quint8 m_round; // 1 bytes
       PartialDate m_date; // 4 bytes? (could use a date Id?)
 

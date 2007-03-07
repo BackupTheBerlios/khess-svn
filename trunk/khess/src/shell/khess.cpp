@@ -27,16 +27,25 @@
 
 #include <dosd.h>
 
+#include <board/boardview.h>
+#include <game/game.h>
+
 
 struct Khess::Private
 {
 	
 };
 
-Khess::Khess() : DMainWindow(), d(new Private)
+Khess::Khess() : DWorkspaceMainWindow(), d(new Private)
 {
 	setWindowTitle(tr("Khess"));
 	setAcceptDrops(true);
+	
+	Board::BoardView *view = new Board::BoardView;
+	addWidget(view);
+	
+	Game::Game game;
+	view->setBoard(game.board());
 	
 	statusBar()->show();
 }

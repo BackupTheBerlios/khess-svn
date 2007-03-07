@@ -179,7 +179,7 @@ void Output::writeMove(int variation)
    if (m_options.getOptionAsBool("ColumnStyle") && (m_currentVariationLevel == 0)) {
       // *** If the column style option is set and it's a mainline move
       // *** some special markup is required
-      if (m_game->board().toMove() == White) {
+      if (m_game->board().toMove() == Game::White) {
          // ** If it is white to move, start a new row
          m_output += m_startTagMap[MarkupColumnStyleRow] + m_startTagMap[MarkupColumnStyleMove];
          if (m_currentVariationLevel > 0) {
@@ -216,7 +216,7 @@ void Output::writeMove(int variation)
          m_output += m_startTagMap[MarkupMainLineMove].arg(mvno);
       }
       // *** Write the move number
-      if (m_game->board().toMove() == White) {
+      if (m_game->board().toMove() == Game::White) {
          m_output += QString::number(m_game->moveNumber()) + ".";
       } else if (m_dirtyBlack) {
          m_output += QString::number(m_game->moveNumber()) + "...";
@@ -225,7 +225,7 @@ void Output::writeMove(int variation)
    m_dirtyBlack = false;
 
    // *** Write the actual move
-   m_output += m_game->moveToSan(Game::MoveOnly,variation);
+   m_output += m_game->moveToSan(Game::Game::MoveOnly,variation);
    // *** End the markup for the move
    if (m_currentVariationLevel > 0) {
       m_output += m_endTagMap[MarkupVariationMove];
@@ -356,7 +356,7 @@ void Output::writeTag(QString tagName)
 
 }
 
-QString Output::output(Game* game)
+QString Output::output(Game::Game* game)
 {
 
    m_game = game;
@@ -375,7 +375,7 @@ QString Output::output(Game* game)
    m_output += m_endTagMap[MarkupHeaderBlock];
    //writeNewlineIndent(); //fine 
    m_game->moveToStart();
-   m_dirtyBlack = m_game->board().toMove() == Black;
+   m_dirtyBlack = m_game->board().toMove() == Game::Black;
    m_output += m_startTagMap[MarkupNotationBlock];
    m_output += m_startTagMap[MarkupMainLine];
    if (m_options.getOptionAsBool("ColumnStyle")) {

@@ -23,6 +23,8 @@
  
 #include "game.h"
 
+namespace Game {
+
 QMap<quint64,QString> Game::m_ecoPositions;
 
 Game::Game()
@@ -974,5 +976,7 @@ int Game::nodeCount(int node)
 int Game::moveNumber() const
 {
   return (m_startPly + m_ply) / 2 + 1;
+}
+
 }
 

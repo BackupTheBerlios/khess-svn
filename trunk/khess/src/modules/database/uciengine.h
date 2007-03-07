@@ -34,7 +34,7 @@ class UCIEngine : public Engine
 								QTextStream* logStream = NULL);
 			
 		/** Analyses the the given position */
-		bool startAnalysis(const Board& board);
+		bool startAnalysis(const Game::Board& board);
 		
 		/** Stops any analysis */
 		bool stopAnalysis();
@@ -53,7 +53,7 @@ class UCIEngine : public Engine
 		/** Parses analysis */
 		void parseAnalysis(const QString& message); 
 		
-		Board m_board;
+		Game::Board m_board;
 		
 		QString m_position;
 		QString m_waitingOn;

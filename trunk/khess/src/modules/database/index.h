@@ -56,7 +56,7 @@ class Index {
       /** Sets the tag id for the ECO code of the game for game at index */
       void setEcoId(quint32 index, quint16 id);
       /** Sets the result of the game for game at index */
-      void setResult(quint32 index, Result result);
+      void setResult(quint32 index, Game::Result result);
       /** Sets the round of the game for game at index */
       void setRound(quint32 index, quint8 round);
       /** Sets the date of the game for game at index */
@@ -92,7 +92,7 @@ class Index {
       /** Returns the date in string format for game at index */
       QString dateString(quint32 index);
       /** Returns the result of the game for game at index*/
-      Result result(quint32 index);
+      Game::Result result(quint32 index);
       /** Returns the round of the game for game at index*/
       quint8 round(quint32 index);
 

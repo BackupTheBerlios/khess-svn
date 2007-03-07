@@ -77,7 +77,7 @@ class Output
       void reset();
 
       /* Create the output for the given game */
-      QString output(Game* game);
+      QString output(Game::Game* game);
 
       /* User definable settings */
       void setTemplateFile(const QString& filename="");
@@ -128,7 +128,7 @@ class Output
       /** Pointer to the game being exported */
       QString m_whiteColumnSpace;
       QString m_blackColumnSpace;
-      Game * m_game;
+      Game::Game * m_game;
       /** The export result */
       QString m_output;
       /** Map containing the different types of outputs available, and a description of each */

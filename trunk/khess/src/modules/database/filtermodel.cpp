@@ -31,7 +31,7 @@ FilterModel::FilterModel(Filter* filter, QObject* parent)
                  << "Result"
                  << "ECO"
                  << "Length";
-   m_game = new Game;
+   m_game = new Game::Game;
    m_gameIndex = new int;
    *m_gameIndex = -1;
 }

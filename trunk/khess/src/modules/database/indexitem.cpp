@@ -49,7 +49,7 @@ IndexItem::IndexItem()
       m_whiteElo = -1;
       m_blackElo = -1;
       m_ecoId = -1;
-      m_result = Unknown;
+      m_result = Game::Unknown;
       m_round = -1;
 }
 
@@ -86,7 +86,7 @@ void IndexItem::setDate(const PartialDate& date)
 {
    m_date = date;
 }
-void IndexItem::setResult(Result result)
+void IndexItem::setResult(Game::Result result)
 {
    m_result = result;
 }
@@ -132,7 +132,7 @@ quint8 IndexItem::round()
 {
    return m_round;
 }
-Result IndexItem::result()
+Game::Result IndexItem::result()
 {
    return m_result;
 }

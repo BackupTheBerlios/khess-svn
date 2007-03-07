@@ -21,7 +21,7 @@ Database::~Database()
 {
 }
 
-bool Database::loadHeaders(int index, Game& game)
+bool Database::loadHeaders(int index, Game::Game& game)
 {
 	return load(index, game);
 }

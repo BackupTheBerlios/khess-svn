@@ -22,6 +22,8 @@
 #include "common.h"
 #include <QStack>
 
+namespace Game {
+
 /** @ingroup Database  
 The HistoryItem class stores move history for undoing moves. */
 class HistoryItem {
@@ -66,5 +68,7 @@ private:
 };
 
 typedef QStack<HistoryItem> History;
+
+}
 
 #endif

@@ -19,4 +19,4 @@
  
 #include "move.h" 
  
-typedef QVector<Move> MoveList;
+typedef QVector<Game::Move> MoveList;

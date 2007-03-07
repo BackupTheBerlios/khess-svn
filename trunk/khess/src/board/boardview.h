@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado - krawek@gmail.com               *
+ *   Copyright (C) 2007 by Jorge Cuadrado   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,44 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef BOARDVIEW_H
+#define BOARDVIEW_H
 
+#include <QGraphicsView>
 
-#ifndef _KHESS_H_
-#define _KHESS_H_
+#include "game/board.h"
+#include "pieceitem.h"
 
-#include "dworkspacemainwindow.h"
-
+namespace Board {
 
 /**
- * This class serves as the main window for Khess.  It handles the
- * menus, toolbars, and status bars.
- *
- * @short Main window class
- * @author David Cuadrado - <krawek@gmail.com>
- * @version 0.1
- */
+ * @author Jorge Cuadrado <kuadrosx@zi0n>
+*/
 
-class Khess : public DWorkspaceMainWindow
+class BoardView : public QGraphicsView
 {
-	Q_OBJECT
 	public:
-		Khess();
-		~Khess();
-	
-	private slots:
-		void fileOpen();
-		void fileSave();
-		void fileSaveAs();
-		void filePrint();
-		void optionsPreferences();
-
-		void changeStatusbar(const QString& text);
-		void changeCaption(const QString& text);
-
+		BoardView(QWidget * parent = 0);
+		~BoardView();
+		
+		void setBoard(const Game::Board &board);
+		
 	private:
 		struct Private;
 		Private *const d;
 };
 
-#endif // _KHESS_H_
+}
 
+#endif

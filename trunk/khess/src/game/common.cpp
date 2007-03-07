@@ -17,6 +17,8 @@
 
 #include "common.h"
 
+namespace Game {
+
 Piece charToPiece(const QChar& letter)
 {
 	char pieceChar = letter.toLatin1();
@@ -110,4 +112,7 @@ Color oppositeColor(Color c)
 {
   return c == White ? Black : White;
 }
+
+}
+
 

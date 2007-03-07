@@ -65,7 +65,7 @@ class FilterModel: public QAbstractItemModel
       QStringList m_columnNames;
       /** A pointer to a game object, to hold the retrieved information 
        * about the game */
-      Game* m_game;
+      Game::Game* m_game;
       /** Current game index - used for caching */
       int* m_gameIndex;
 };

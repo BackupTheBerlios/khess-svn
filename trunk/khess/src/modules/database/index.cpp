@@ -62,7 +62,7 @@ void Index::setEcoId(quint32 index, quint16 id)
 {
    m_gameIndex[index].setEcoId(id);
 }
-void Index::setResult(quint32 index, Result result)
+void Index::setResult(quint32 index, Game::Result result)
 {
    m_gameIndex[index].setResult(result);
 }
@@ -203,7 +203,7 @@ QString Index::dateString(quint32 index)
    return m_gameIndex[index].date().asString();
 }
 
-Result Index::result(quint32 index)
+Game::Result Index::result(quint32 index)
 {
    return m_gameIndex[index].result();
 }
