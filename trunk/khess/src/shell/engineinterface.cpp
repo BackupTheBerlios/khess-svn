@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005-2007 by David Cuadrado - krawek@gmail.com          *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,97 +18,85 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
-#include "khess.h"
-
-#include <QLabel>
-#include <QStatusBar>
-#include <QMenuBar>
-
-#include <dosd.h>
-
-#include <board/boardview.h>
-#include <game/game.h>
-
-#include "gamemanager.h"
-
 #include "engineinterface.h"
 
-#include "interfacefactory.h"
+#include <QProcess>
 
+#include <QtDebug>
 
-struct Khess::Private
+namespace IO {
+
+struct EngineInterface::Private
 {
-	GameManager *gameManager;
-	
-	~Private() 
-	{
-		delete gameManager;
-	}
+	QProcess *engine;
 };
 
-Khess::Khess() : DWorkspaceMainWindow(), d(new Private)
+EngineInterface::EngineInterface(QObject *parent) : IO::Interface(parent), d( new Private)
 {
-	setWindowTitle(tr("Khess"));
-	setAcceptDrops(true);
-	
-	d->gameManager = new GameManager(this);
-	
-	Board::BoardView *view = new Board::BoardView;
-	addWidget(view);
-	
-	Game::Game *game = d->gameManager->newGame();
-	view->setGame(game);
-	
-	IO::Interface *engine = InterfaceFactory::create<IO::EngineInterface>();
-	engine->openResource("crafty");
-	
-	statusBar()->show();
-	setupMenu();
+	d->engine = 0;
 }
 
-Khess::~Khess()
+EngineInterface::~EngineInterface()
 {
 	delete d;
 }
 
-void Khess::fileOpen()
+bool EngineInterface::openResource(const QString &command, const QStringList &args)
 {
-}
-
-void Khess::fileSave()
-{
-}
-
-void Khess::fileSaveAs()
-{
-}
-
-void Khess::filePrint()
-{
-}
-
-void Khess::optionsPreferences()
-{
-}
-
-void Khess::changeStatusbar(const QString& text)
-{
-	statusBar()->showMessage(text);
-}
-
-void Khess::changeCaption(const QString& text)
-{
-	setWindowTitle(text);
-}
-
-void Khess::setupMenu()
-{
-	QMenu *file = menuBar()->addMenu(tr("File"));
+	d->engine = new QProcess(this);
 	
-	file->addSeparator();
-	file->addAction(tr("Quit"), this, SLOT(close()));
+	connect(d->engine, SIGNAL(readyReadStandardOutput()), this, SLOT(parseData()));
+	connect(d->engine, SIGNAL(readyReadStandardError()), this, SLOT(parseError()));
 	
+	d->engine->start(command, args);
+	bool ok = d->engine->waitForStarted();
 	
+	if ( ok )
+	{
+		send("xboard");
+		send("protover 2");
+		send("hard");
+	}
+	
+	return ok;
 }
 
+bool EngineInterface::closeResource()
+{
+	if ( d->engine )
+	{
+		send("quit");
+		d->engine->terminate();
+		d->engine->waitForFinished();
+		
+		if ( d->engine->isOpen() )
+		{
+			d->engine->kill();
+		}
+		
+		return d->engine->isOpen();
+	}
+	
+	return false;
+}
+
+void EngineInterface::send(const QString &data)
+{
+	d->engine->write((data+"\n").toLocal8Bit());
+}
+
+void EngineInterface::parseData()
+{
+	QString data = QString::fromLocal8Bit(d->engine->readAllStandardOutput());
+	
+	qDebug() << "LEIDO: " << data;
+}
+
+void EngineInterface::parseError()
+{
+	QString data = QString::fromLocal8Bit(d->engine->readAllStandardError());
+	
+	qDebug() << "ERROR: " << data;
+}
+
+}

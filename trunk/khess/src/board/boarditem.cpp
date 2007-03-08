@@ -234,15 +234,22 @@ bool BoardItem::reposition(PieceItem* piece)
 	
 	QMap<double , SquareItem *> rects;
 	
-	foreach(QGraphicsItem *it, items)
 	{
-		if(SquareItem*square =  qgraphicsitem_cast<SquareItem*>(it))
+		SquareItem *currentSquareItem = d->squares[piece->currentSquare()];
+		
+		foreach(QGraphicsItem *it, items)
 		{
-			QRectF intersect = square->sceneBoundingRect().intersect(piece->sceneBoundingRect());
-			
-			rects.insert( intersect.height() * intersect.width(), square );
+			if(SquareItem*square =  qgraphicsitem_cast<SquareItem*>(it))
+			{
+				if( square == currentSquareItem ) continue;
+				
+				QRectF intersect = square->sceneBoundingRect().intersect(piece->sceneBoundingRect());
+				
+				rects.insert( intersect.height() * intersect.width(), square );
+			}
 		}
 	}
+	
 	QList<double> heights = rects.keys();
 	
 	double max = -1;

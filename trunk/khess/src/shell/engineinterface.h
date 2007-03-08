@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by                                                 *
- *   David Cuadrado  krawek@gmail.com                                      *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,38 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KHNEWPLAYER_H
-#define KHNEWPLAYER_H
+#ifndef IOENGINEINTERFACE_H
+#define IOENGINEINTERFACE_H
 
-#include <kdialogbase.h>
-#include <knuminput.h>
-#include <qlabel.h>
-#include <klineedit.h>
-#include <qvbox.h>
-#include <qhgroupbox.h>
+#include <khiointerface.h>
 
-#include "khselectfacebutton.h"
+namespace IO {
 
 /**
-	@author David Cuadrado <krawek@gmail.com >
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class KHNewPlayer : public KDialogBase
+class EngineInterface : public IO::Interface
 {
 	Q_OBJECT
 	public:
-		KHNewPlayer(QWidget *parent = 0);
-		~KHNewPlayer();
+		EngineInterface(QObject *parent = 0);
+		~EngineInterface();
+		
+	public slots:
+		bool openResource(const QString &command, const QStringList &args = QStringList());
+		void send(const QString &data);
+		bool closeResource();
 		
 	protected slots:
-		virtual void slotOk();
-		
+		void parseData();
+		void parseError();
 		
 	private:
-		KLineEdit *m_nameLE;
-		KIntNumInput *m_ageBox;
-		KLineEdit *m_loginLE;
-		KIntNumInput *m_eloBox;
-		KHSelectFaceButton *m_face;
+		struct Private;
+		Private *const d;
 };
+
+}
 
 #endif

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by                                                 *
- *   David Cuadrado  krawek@gmail.com                                      *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,51 +18,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KHWARRIORBASE_H
-#define KHWARRIORBASE_H
+#ifndef INTERFACEFACTORY_H
+#define INTERFACEFACTORY_H
 
-#include <qobject.h>
-#include <qpixmap.h>
-#include <qstring.h>
-
-class KHWarriorBase;
+#include "khiointerface.h"
 
 /**
- * @author David Cuadrado <krawek@gmail.com >
+	@author David Cuadrado <krawek@gmail.com>
 */
-
-class KHWarriorBase : public QObject
+class InterfaceFactory
 {
-	Q_OBJECT
-	public:
-		enum PlayerType
-		{
-			Human = 0,
-			Engine,
-			Internet
-		};
-		
-		KHWarriorBase();
-		~KHWarriorBase();
-		void setInformation(const QString &name,const QString &login, PlayerType pt = Human );
-		void setName(const QString &name);
-		void setElo(int elo);
-		void setAge(int age);
-		void setType(PlayerType pt);
-		
-		QString theName() const;
-		QString login() const;
-		int elo() const;
-		int age() const;
-		int type() const;
-		
 	private:
-		QPixmap m_defeatedFace, m_winFace;
-		QString m_name, m_login;
-		int m_elo;
-		int m_age;
-		bool m_isWhite;
-		PlayerType m_type;
+		InterfaceFactory();
+		
+	public:
+		~InterfaceFactory();
+		
+		template<typename io>
+				static IO::Interface *create()
+		{
+			return new io;
+		};
 };
 
 #endif

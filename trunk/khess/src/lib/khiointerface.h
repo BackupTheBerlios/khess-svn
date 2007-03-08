@@ -18,30 +18,35 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef KHIOINTERFACE_H
-#define KHIOINTERFACE_H
+#ifndef IOINTERFACE_H
+#define IOINTERFACE_H
 
-#include <qobject.h>
+#include <QObject>
+#include <QStringList>
+
+namespace IO {
 
 /**
  * Interfaz con motores o internet.
  * @author David Cuadrado <krawek@gmail.com >
 */
 
-class KHIOInterface : public QObject
+class Interface : public QObject
 {
 	Q_OBJECT
 	public:
-		KHIOInterface();
-		~KHIOInterface();
-		virtual void sendToResource(const QString &data) = 0;
+		Interface(QObject *parent = 0);
+		virtual ~Interface();
+		virtual void send(const QString &data) = 0;
 		
 	public slots:
-		virtual void connectToResource(const QString &node, const QString &opt = QString() ) = 0;
-		virtual void closeResource() = 0;
+		virtual bool openResource(const QString &node, const QStringList &opts = QStringList() ) = 0;
+		virtual bool closeResource() = 0;
 		
 	signals:
 		void dataReaded(const QString &data);
 };
+
+}
 
 #endif
