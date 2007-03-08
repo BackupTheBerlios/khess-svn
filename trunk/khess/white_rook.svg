@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created using Karbon14, part of koffice: http://www.koffice.org/karbon -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   id="svg1712"
+   sodipodi:version="0.32"
+   inkscape:version="0.43"
+   sodipodi:docname="white_rook.svg"
+   sodipodi:docbase="/home/krawek/Proyectos/khess"
+   version="1.0">
+  <metadata
+     id="metadata1719">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="538"
+     inkscape:window-width="726"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="5.0259796"
+     inkscape:cx="53.582241"
+     inkscape:cy="11.829824"
+     inkscape:window-x="290"
+     inkscape:window-y="170"
+     inkscape:current-layer="svg1712" />
+  <defs
+     id="defs1714" />
+  <g
+     id="Layer"
+     transform="matrix(0.462149,0,0,0.397808,-194.3573,-277.5882)">
+    <path
+       id="path1705"
+       d="M 440.414,725.95 L 440.414,748.801 L 469.848,748.801 L 469.848,725.95 L 440.414,725.95 M 425.18,776.041 L 422.727,773.588 L 422.727,764.68 L 435.895,751.383 L 435.895,725.563 L 424.534,715.622 L 424.534,703.874 L 428.278,700.259 L 439.897,700.259 L 442.092,702.454 L 442.092,705.81 L 445.836,705.81 L 445.836,702.454 L 448.03,700.259 L 462.231,700.259 L 464.426,702.454 L 464.426,705.81 L 468.041,705.81 L 468.041,702.454 L 470.365,700.259 L 481.984,700.259 L 485.728,703.874 L 485.728,715.622 L 474.367,725.563 L 474.367,751.383 L 487.535,764.68 L 487.535,773.588 L 485.082,776.041 L 425.18,776.041 M 427.245,765.842 L 427.245,770.877 L 483.016,770.877 L 483.016,765.842 L 427.245,765.842 M 439.897,753.061 L 431.377,761.323 L 478.885,761.323 L 470.365,753.061 L 439.897,753.061 M 450.225,705.681 L 450.225,709.038 L 448.289,710.845 L 439.897,710.845 L 437.961,709.038 L 437.961,705.423 L 430.731,705.423 L 429.053,707.23 L 429.053,714.46 L 437.832,721.56 L 472.43,721.56 L 481.209,714.46 L 481.209,707.23 L 479.531,705.423 L 472.301,705.423 L 472.301,709.038 L 470.365,710.845 L 461.973,710.845 L 460.037,709.038 L 460.037,705.681 L 450.225,705.681"
+       style="fill:#000000;stroke-width:1.25" />
+  </g>
+</svg>

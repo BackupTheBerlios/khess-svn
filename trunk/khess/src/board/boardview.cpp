@@ -22,8 +22,9 @@
 #include <QGraphicsScene>
 
 #include "boarditem.h"
-
 #include "pieceitem.h"
+
+#include "game/game.h"
 
 namespace Board {
 
@@ -62,10 +63,20 @@ BoardView::~BoardView()
 	delete d;
 }
 
-void BoardView::setBoard(const Game::Board &board)
+QSize BoardView::sizeHint() const
 {
-	d->boardItem->setGameBoard(board);
+	return QSize(400,400); // FIXME
+}
+
+void BoardView::setGame(Game::Game *const game)
+{
+	d->boardItem->setGame(game);
 	update();
+}
+
+void BoardView::drawBackground(QPainter *painter, const QRectF &rect)
+{
+	painter->fillRect(rect, Qt::gray);
 }
 
 }

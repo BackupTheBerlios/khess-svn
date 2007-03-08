@@ -22,7 +22,10 @@
 
 #include <QGraphicsView>
 
-#include "game/board.h"
+namespace Game {
+	class Game;
+}
+
 #include "pieceitem.h"
 
 namespace Board {
@@ -37,7 +40,12 @@ class BoardView : public QGraphicsView
 		BoardView(QWidget * parent = 0);
 		~BoardView();
 		
-		void setBoard(const Game::Board &board);
+		void setGame(Game::Game *const game);
+		
+		QSize sizeHint() const;
+		
+	protected:
+		void drawBackground(QPainter * painter, const QRectF & rect);
 		
 	private:
 		struct Private;

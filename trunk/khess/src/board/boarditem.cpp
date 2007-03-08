@@ -25,39 +25,76 @@
 #include <QGraphicsScene>
 
 #include <QDebug>
+
 #include "pieceitem.h"
+
+#include "game/game.h"
 
 namespace Board {
 
 class SquareItem : public QGraphicsItem
 {
 	public:
-		
 		enum { Type = UserType + 1 };
-		SquareItem(QGraphicsItem *board, bool white);
+		SquareItem(QGraphicsItem *board, const Game::Square &logicalIndex, bool white);
 		~SquareItem();
 		
 		
-		void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+		void paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 		
-		QRectF boundingRect () const;
+		QRectF boundingRect() const;
 		
-		int type () const
+		int type() const
 		{
 			return Type;
 		};
 		
+		void setCurrentPiece(Board::PieceItem *currentPiece);
+		void replaceCurrentPiece(Board::PieceItem *currentPiece);
+		Board::PieceItem *currentPiece() const;
+		
+		Game::Square logicalIndex() const;
+		
 	private:
 		bool m_white;
+		Game::Square m_logicalIndex;
+		
+		Board::PieceItem *m_currentPiece;
 };
 
-SquareItem::SquareItem(QGraphicsItem *board, bool white) : QGraphicsItem(board), m_white(white)
+SquareItem::SquareItem(QGraphicsItem *board, const Game::Square &logicalIndex, bool white) : QGraphicsItem(board), m_white(white), m_logicalIndex(logicalIndex), m_currentPiece(0)
 {
 	
 }
 
 SquareItem::~SquareItem()
 {
+}
+
+void SquareItem::setCurrentPiece(Board::PieceItem *currentPiece)
+{
+	m_currentPiece = currentPiece;
+}
+
+void SquareItem::replaceCurrentPiece(Board::PieceItem *currentPiece)
+{
+	if( m_currentPiece )
+	{
+		delete m_currentPiece;
+		m_currentPiece = 0;
+	}
+	
+	m_currentPiece = currentPiece;
+}
+
+Board::PieceItem *SquareItem::currentPiece() const
+{
+	return m_currentPiece;
+}
+
+Game::Square SquareItem::logicalIndex() const
+{
+	return m_logicalIndex;
 }
 
 void SquareItem::paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
@@ -83,24 +120,25 @@ QRectF SquareItem::boundingRect () const
 
 struct BoardItem::Private
 {
-	QVector< QVector<SquareItem *> > squares;
-	Game::Board gameBoard;
+	QVector< SquareItem *> squares;
+	Game::Game *game;
 	
 };
 
 BoardItem::BoardItem( QGraphicsItem * parent , QGraphicsScene * scene ) : QGraphicsItem(), d( new Private)
 {
-	d->squares.resize(8);
-	for(int i = 0; i < 8; i++)
+	d->squares.resize(64);
+	for(Game::Square sq = 0; sq < 64; sq++)
 	{
-		for(int j = 0; j < 8; j++)
-		{
-			bool white = ((j+i)%2 == 0);
-			SquareItem *square = new SquareItem( this, white);
-			square->setPos(i*square->boundingRect().width(), j *square->boundingRect().height());
-			
-			d->squares[i].append(square);
-		}
+		QPoint coord = toCoord(sq);
+		
+		bool white = (coord.x()+coord.y()) % 2 == 0;
+		
+		SquareItem *square = new SquareItem( this, sq, white);
+		
+		square->setPos(coord.x() * 32, coord.y() * 32 );
+		
+		d->squares[sq] = square;
 	}
 }
 
@@ -121,34 +159,73 @@ QRectF BoardItem::boundingRect () const
 	return QRectF(0,0, 32*8, 32*8);
 }
 
-void BoardItem::setGameBoard(const Game::Board &board)
+void BoardItem::setGame(Game::Game *const game)
 {
-	d->gameBoard = board;
+	d->game = game;
+	drawBoard();
+}
+
+void BoardItem::drawBoard()
+{
+	Game::Board board = d->game->board();
 	
-	for(int i = 0; i < 64; i++)
+	for(Game::Square square = 0; square < 64; square++)
 	{
-		int x = i % 8;
-		int y = 7 - i / 8;
+		d->squares[square]->replaceCurrentPiece(0); // Remove all pieces
 		
-		Game::Piece pieceType = d->gameBoard.at(i);
-		
-		qDebug() << pieceType;
-		
+		Game::Piece pieceType = board.at(square);
 		if(pieceType != 0 && pieceType != 255)
 		{
 			PieceItem *piece = new PieceItem(this, pieceType);
+			piece->setCurrentSquare(square);
+			
 			scene()->addItem(piece);
 			
-			setPiece(piece, y, x);
+			setPiece(piece, square);
 		}
 	}
 }
 
+void BoardItem::movePiece(PieceItem* piece, const Game::Square &from, const Game::Square &to)
+{
+	setPiece(piece, to );
+	d->squares[from]->setCurrentPiece(0);
+}
+
 void BoardItem::setPiece(PieceItem * piece, int row, int col )
 {
+	setPiece(piece, toSquare(row, col));
+}
+
+void BoardItem::setPiece(PieceItem *piece, const Game::Square &square)
+{
 	piece->setParentItem(this);
-	d->squares[col][row]->setZValue(1);
-	piece->setPos(d->squares[col][row]->pos());
+	
+	Board::SquareItem *squareItem = d->squares[square];
+	
+	squareItem->setZValue(1);
+	piece->setPos(squareItem->pos());
+	
+	squareItem->replaceCurrentPiece(piece);
+	
+	piece->setCurrentSquare(square);
+}
+
+QPoint BoardItem::toCoord(const Game::Square &square)
+{
+	// TODO: flip
+	return QPoint(square % 8, 7 - square / 8);
+}
+
+Game::Square BoardItem::toSquare(const QPoint &coord)
+{
+	// TODO: flip
+	return toSquare(coord.x(), coord.y());
+}
+
+Game::Square BoardItem::toSquare(int row, int col)
+{
+	return 8 * row + col;
 }
 
 bool BoardItem::reposition(PieceItem* piece)
@@ -163,7 +240,6 @@ bool BoardItem::reposition(PieceItem* piece)
 		{
 			QRectF intersect = square->sceneBoundingRect().intersect(piece->sceneBoundingRect());
 			
-			qDebug() << intersect;
 			rects.insert( intersect.height() * intersect.width(), square );
 		}
 	}
@@ -181,8 +257,44 @@ bool BoardItem::reposition(PieceItem* piece)
 	
 	if( max > 0 )
 	{
-		piece->setPos(rects[max]->pos());
-		return true;
+		Game::Board board = d->game->board();
+		
+		Game::Square from = piece->currentSquare();
+		Game::Square to = rects[max]->logicalIndex();
+		
+		Game::Move move(board, from, to);
+		
+		if ((to < 8 || to > 55) && (board.at(from) == Game::WhitePawn || board.at(from) == Game::BlackPawn))
+		{
+			qWarning("PROMOTION!!!!!!");
+		}
+		
+		if (board.isLegal(move))
+		{
+			movePiece(piece, from, to);
+			
+			if (d->game->atEnd())
+			{
+				d->game->addMove(move);
+			}
+			else
+			{
+				qFatal("No variants for now...");
+			}
+			
+			d->game->forward();
+			
+			if( move.isCastling() || move.isEnPassant() || move.isSpecial() )
+			{
+				drawBoard(); // FIXME: fix this lazy way! =P
+			}
+			
+			return true;
+		}
+		else
+		{
+			qWarning("Illegal move!");
+		}
 	}
 	
 	return false;

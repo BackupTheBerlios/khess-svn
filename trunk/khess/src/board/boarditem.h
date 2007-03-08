@@ -22,7 +22,11 @@
 
 #include <QGraphicsItem>
 
-#include <game/board.h>
+#include <game/common.h>
+
+namespace Game {
+	class Game;
+}
 
 namespace Board {
 
@@ -40,11 +44,20 @@ class BoardItem : public QGraphicsItem
 		void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget );
 		QRectF boundingRect () const;
 		
+		void setGame(Game::Game *const game);
 		
-		void setGameBoard(const Game::Board &board);
+		void movePiece(PieceItem* piece, const Game::Square &from, const Game::Square &to);
 		void setPiece(PieceItem* piece, int row, int col );
+		void setPiece(PieceItem *piece, const Game::Square &square);
 		
 		bool reposition(PieceItem* piece);
+		
+		void drawBoard();
+		
+	protected:
+		QPoint toCoord(const Game::Square &square);
+		Game::Square toSquare(const QPoint &coord);
+		Game::Square toSquare(int row, int col);
 		
 	private:
 		struct Private;

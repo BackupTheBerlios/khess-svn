@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado - krawek@gmail.com               *
+ *   Copyright (C) 2005-2007 by David Cuadrado - krawek@gmail.com          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,6 +49,9 @@ class Khess : public DWorkspaceMainWindow
 
 		void changeStatusbar(const QString& text);
 		void changeCaption(const QString& text);
+		
+	protected:
+		void setupMenu();
 
 	private:
 		struct Private;

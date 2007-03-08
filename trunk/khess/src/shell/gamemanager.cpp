@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005-2007 by David Cuadrado - krawek@gmail.com          *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,90 +18,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
-#include "khess.h"
-
-#include <QLabel>
-#include <QStatusBar>
-#include <QMenuBar>
-
-#include <dosd.h>
-
-#include <board/boardview.h>
-#include <game/game.h>
-
 #include "gamemanager.h"
 
+#include <game/game.h>
 
-struct Khess::Private
+struct GameManager::Private
 {
-	GameManager *gameManager;
+	QList<Game::Game *> games;
 	
-	~Private() 
+	~Private()
 	{
-		delete gameManager;
+		qDeleteAll(games);
 	}
 };
 
-Khess::Khess() : DWorkspaceMainWindow(), d(new Private)
+GameManager::GameManager(QObject *parent)
+ : QObject(parent), d(new Private)
 {
-	setWindowTitle(tr("Khess"));
-	setAcceptDrops(true);
-	
-	d->gameManager = new GameManager(this);
-	
-	Board::BoardView *view = new Board::BoardView;
-	addWidget(view);
-	
-	Game::Game *game = d->gameManager->newGame();
-	view->setGame(game);
-	
-	statusBar()->show();
-	setupMenu();
 }
 
-Khess::~Khess()
+
+GameManager::~GameManager()
 {
 	delete d;
 }
 
-void Khess::fileOpen()
-{
-}
 
-void Khess::fileSave()
+Game::Game *GameManager::newGame()
 {
-}
-
-void Khess::fileSaveAs()
-{
-}
-
-void Khess::filePrint()
-{
-}
-
-void Khess::optionsPreferences()
-{
-}
-
-void Khess::changeStatusbar(const QString& text)
-{
-	statusBar()->showMessage(text);
-}
-
-void Khess::changeCaption(const QString& text)
-{
-	setWindowTitle(text);
-}
-
-void Khess::setupMenu()
-{
-	QMenu *file = menuBar()->addMenu(tr("File"));
+	Game::Game *game = new Game::Game;
 	
-	file->addSeparator();
-	file->addAction(tr("Quit"), this, SLOT(close()));
+	d->games << game;
 	
-	
+	return game;
 }
+
+
 

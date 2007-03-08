@@ -2,9 +2,10 @@
 TEMPLATE = app
 
 SOURCES = main.cpp \
-khess.cpp
-HEADERS += khess.h
-
+khess.cpp \
+gamemanager.cpp
+HEADERS += khess.h \
+gamemanager.h
 include(shell_config.pri)
 
 CONFIG += warn_on

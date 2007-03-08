@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005-2007 by David Cuadrado - krawek@gmail.com          *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,90 +18,29 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
 
-#include "khess.h"
+#include <QObject>
 
-#include <QLabel>
-#include <QStatusBar>
-#include <QMenuBar>
+namespace Game { class Game; }
 
-#include <dosd.h>
+/**
+ * @author David Cuadrado <krawek@gmail.com>
+*/
 
-#include <board/boardview.h>
-#include <game/game.h>
-
-#include "gamemanager.h"
-
-
-struct Khess::Private
+class GameManager : public QObject
 {
-	GameManager *gameManager;
-	
-	~Private() 
-	{
-		delete gameManager;
-	}
+	Q_OBJECT
+	public:
+		GameManager(QObject *parent = 0);	
+		~GameManager();
+		
+		Game::Game *newGame();
+		
+	private:
+		struct Private;
+		Private *const d;
 };
 
-Khess::Khess() : DWorkspaceMainWindow(), d(new Private)
-{
-	setWindowTitle(tr("Khess"));
-	setAcceptDrops(true);
-	
-	d->gameManager = new GameManager(this);
-	
-	Board::BoardView *view = new Board::BoardView;
-	addWidget(view);
-	
-	Game::Game *game = d->gameManager->newGame();
-	view->setGame(game);
-	
-	statusBar()->show();
-	setupMenu();
-}
-
-Khess::~Khess()
-{
-	delete d;
-}
-
-void Khess::fileOpen()
-{
-}
-
-void Khess::fileSave()
-{
-}
-
-void Khess::fileSaveAs()
-{
-}
-
-void Khess::filePrint()
-{
-}
-
-void Khess::optionsPreferences()
-{
-}
-
-void Khess::changeStatusbar(const QString& text)
-{
-	statusBar()->showMessage(text);
-}
-
-void Khess::changeCaption(const QString& text)
-{
-	setWindowTitle(text);
-}
-
-void Khess::setupMenu()
-{
-	QMenu *file = menuBar()->addMenu(tr("File"));
-	
-	file->addSeparator();
-	file->addAction(tr("Quit"), this, SLOT(close()));
-	
-	
-}
-
+#endif

@@ -33,13 +33,19 @@ struct PieceItem::Private
 	int z;
 	BoardItem *board;
 	QPointF currentPos;
+	
+	Game::Piece pieceType;
+	Game::Square currentSquare;
 };
 
 PieceItem::PieceItem(BoardItem *board, const Game::Piece &type): QGraphicsSvgItem(), d(new Private)
 {
 	setFlag(QGraphicsItem::ItemIsMovable, true);
 	
-	chooseSvg(type);
+	d->pieceType = type;
+	d->currentSquare = Game::InvalidSquare;
+	
+	chooseSvg();
 	setZValue(10);
 	d->board = board;
 }
@@ -50,22 +56,87 @@ PieceItem::~PieceItem()
 	delete d;
 }
 
+Game::Piece PieceItem::pieceType() const
+{
+	return d->pieceType;
+}
 
-void PieceItem::chooseSvg(const Game::Piece &type)
+Game::Square PieceItem::currentSquare() const
+{
+	return d->currentSquare;
+}
+
+void PieceItem::setCurrentSquare(const Game::Square &square)
+{
+	d->currentSquare = square;
+}
+
+void PieceItem::chooseSvg()
 {
 	QSvgRenderer *renderer = new QSvgRenderer;
 	QString fileName;
 	
-	switch(type)
+	switch(d->pieceType)
 	{
 		case Game::BlackPawn:
 		{
 			fileName = "black_pawn.svg";
 		}
 		break;
+		case Game::BlackRook:
+		{
+			fileName = "black_rook.svg";
+		}
+		break;
+		case Game::BlackKnight:
+		{
+			fileName = "black_knight.svg";
+		}
+		break;
+		case Game::BlackBishop:
+		{
+			fileName = "black_bishop.svg";
+		}
+		break;
+		case Game::BlackQueen:
+		{
+			fileName = "black_queen.svg";
+		}
+		break;
+		case Game::BlackKing:
+		{
+			fileName = "black_king.svg";
+		}
+		break;
+		
 		case Game::WhitePawn:
 		{
 			fileName = "white_pawn.svg";
+		}
+		break;
+		case Game::WhiteRook:
+		{
+			fileName = "white_rook.svg";
+		}
+		break;
+		case Game::WhiteKnight:
+		{
+			fileName = "white_knight.svg";
+		}
+		break;
+		case Game::WhiteBishop:
+		{
+			fileName = "white_bishop.svg";
+		}
+		break;
+		case Game::WhiteQueen:
+		{
+			fileName = "white_queen.svg";
+		}
+		break;
+		case Game::WhiteKing:
+		{
+			fileName = "white_king.svg";
 		}
 		break;
 	}
@@ -76,7 +147,6 @@ void PieceItem::chooseSvg(const Game::Piece &type)
 		
 		if( f.open(QIODevice::ReadOnly | QIODevice::Text ) )
 		{
-			qDebug(fileName.toLocal8Bit().data());
 			renderer->load(f.readAll());
 			setSharedRenderer(renderer);
 		}
@@ -88,7 +158,7 @@ void PieceItem::chooseSvg(const Game::Piece &type)
 }
 
 
-void PieceItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
+void PieceItem::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
 	d->z = zValue();
 	setZValue(100);

@@ -37,8 +37,13 @@ class PieceItem : public QGraphicsSvgItem
 		PieceItem(BoardItem *board, const Game::Piece &type);
 		~PieceItem();
 		
+		Game::Piece pieceType() const;
+		
+		void setCurrentSquare(const Game::Square &square);
+		Game::Square currentSquare() const;
+		
 	protected:
-		void chooseSvg(const Game::Piece &type);
+		void chooseSvg();
 		void mousePressEvent ( QGraphicsSceneMouseEvent * event );
 		void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
 		QVariant itemChange ( GraphicsItemChange change, const QVariant & value );
