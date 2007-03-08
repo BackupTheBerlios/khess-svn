@@ -241,7 +241,7 @@ bool BoardItem::reposition(PieceItem* piece)
 		{
 			if(SquareItem*square =  qgraphicsitem_cast<SquareItem*>(it))
 			{
-				if( square == currentSquareItem ) continue;
+// 				if( square == currentSquareItem ) continue;
 				
 				QRectF intersect = square->sceneBoundingRect().intersect(piece->sceneBoundingRect());
 				

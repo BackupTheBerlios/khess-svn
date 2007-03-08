@@ -18,41 +18,88 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef IOENGINEINTERFACE_H
-#define IOENGINEINTERFACE_H
+#include "matchdialog.h"
+#include <QCheckBox>
+#include <QVBoxLayout>
+
+#include <QComboBox>
+#include <QProcess>
 
 #include <interfaces/interface.h>
 
-namespace IO {
-
-/**
- * @author David Cuadrado <krawek@gmail.com>
-*/
-class EngineInterface : public IO::Interface
+struct MatchDialog::Private
 {
-	Q_OBJECT
-	public:
-		EngineInterface(QObject *parent = 0);
-		~EngineInterface();
-		
-	public slots:
-		void doMove(const QString &san);
-		bool openResource(const InterfaceParams *params);
-		void send(const QString &data);
-		bool closeResource();
-		
-	protected slots:
-		void parseData();
-		void parseError();
-		
-	signals:
-		void moved(const QString &fen);
-		
-	private:
-		struct Private;
-		Private *const d;
+	IO::InterfaceParams *params;
+	
+	QCheckBox *internet;
+	QComboBox *engine;
 };
 
+MatchDialog::MatchDialog()
+	: DTabDialog(DTabDialog::Ok|DTabDialog::Cancel), d(new Private)
+{
+	QWidget *page1 = new QWidget;
+	
+	QVBoxLayout *layout = new QVBoxLayout(page1);
+	
+	d->engine = new QComboBox;
+	findEngines();
+	
+	layout->addWidget(d->engine);
+	
+	d->internet = new QCheckBox(tr("Internet game"));
+	layout->addWidget(d->internet);
+	
+	addTab(page1, tr("Configure"));
+	
+	d->params = new IO::InterfaceParams;
 }
 
-#endif
+
+MatchDialog::~MatchDialog()
+{
+	delete d;
+}
+
+void MatchDialog::findEngines()
+{
+	QStringList engines = QStringList() << "crafty" << "gnuchess";
+	
+	foreach(QString engine, engines)
+	{
+		QProcess proc;
+		proc.start(engine);
+		
+		if( proc.waitForStarted() )
+		{
+			d->engine->addItem(engine);
+			
+			proc.terminate();
+			proc.waitForFinished();
+			proc.kill();
+		}
+	}
+}
+
+IO::InterfaceParams *MatchDialog::params()
+{
+	if( d->internet->isChecked() )
+	{
+		delete d->params;
+// 		d->params = new IO::InterfaceNetParams;
+	}
+	else
+	{
+		QString engine = d->engine->currentText();
+		
+		if(engine.isEmpty()) return 0;
+		
+		delete d->params;
+		d->params = new IO::InterfaceParams;
+		
+		d->params->setNode(engine);
+	}
+	
+	return d->params;
+}
+

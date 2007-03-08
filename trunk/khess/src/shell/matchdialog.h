@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by                                                 *
- *   David Cuadrado  krawek@gmail.com                                      *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,54 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef MATCHDIALOG_H
+#define MATCHDIALOG_H
 
-#ifndef IOINTERFACE_H
-#define IOINTERFACE_H
-
-#include <QObject>
-#include <QStringList>
+#include <dtabdialog.h>
 
 namespace IO {
+	class InterfaceParams;
+}
 
-class InterfaceParams
+/**
+ * @author David Cuadrado <krawek@gmail.com>
+*/
+class MatchDialog : public DTabDialog
 {
 	public:
-		InterfaceParams();
-		~InterfaceParams();
+		MatchDialog();
+		~MatchDialog();
 		
-		void setNode(const QString &node);
-		void setArgs(const QStringList &args);
+		IO::InterfaceParams *params();
 		
-		QString node() const;
-		QStringList args() const;
+	protected:
+		
+	private:
+		void findEngines();
 		
 	private:
 		struct Private;
 		Private *const d;
-};
 
-/**
- * Interfaz con motores o internet.
- * @author David Cuadrado <krawek@gmail.com >
-*/
-class Interface : public QObject
-{
-	Q_OBJECT
-	public:
-		Interface(QObject *parent = 0);
-		virtual ~Interface();
-		
-		virtual void send(const QString &data) = 0;
-		
-	public slots:
-		virtual void doMove(const QString &san) = 0;
-		virtual bool openResource(const InterfaceParams *params ) = 0;
-		virtual bool closeResource() = 0;
-		
-	signals:
-		void dataReaded(const QString &data);
 };
-
-}
 
 #endif

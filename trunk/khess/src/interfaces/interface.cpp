@@ -22,6 +22,43 @@
 
 namespace IO {
 
+
+struct InterfaceParams::Private
+{
+	QString node;
+	QStringList args;
+};
+
+InterfaceParams::InterfaceParams() : d(new Private)
+{
+}
+
+InterfaceParams::~InterfaceParams()
+{
+	delete d;
+}
+
+void InterfaceParams::setNode(const QString &node)
+{
+}
+
+void InterfaceParams::setArgs(const QStringList &args)
+{
+}
+
+
+QString InterfaceParams::node() const
+{
+	return d->node;
+}
+
+QStringList InterfaceParams::args() const
+{
+	return d->args;
+}
+
+
+
 Interface::Interface(QObject *parent) : QObject(parent)
 {
 }

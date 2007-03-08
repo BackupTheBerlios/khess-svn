@@ -31,10 +31,11 @@
 
 #include <game/game.h>
 
-#include "gamemanager.h"
-
 #include "interfaces/engineinterface.h"
 #include "interfaces/interfacefactory.h"
+
+#include "gamemanager.h"
+#include "matchdialog.h"
 
 
 struct Khess::Private
@@ -53,19 +54,6 @@ Khess::Khess() : DWorkspaceMainWindow(), d(new Private)
 	setAcceptDrops(true);
 	
 	d->gameManager = new GameManager(this);
-	
-	Board::BoardView *view = new Board::BoardView;
-	addWidget(view);
-	
-	Game::Game *game = d->gameManager->newGame();
-	
-	Board::BoardItem *board = view->createBoard(game);
-	
-	IO::Interface *engine = InterfaceFactory::create<IO::EngineInterface>();
-	engine->openResource("crafty");
-	
-	connect(board, SIGNAL(moved(const QString &)), engine, SLOT(doMove(const QString &)));
-	connect(engine, SIGNAL(moved(const QString &)), board, SLOT(doMove(const QString &)));
 	
 	statusBar()->show();
 	setupMenu();
@@ -114,5 +102,31 @@ void Khess::setupMenu()
 	file->addAction(tr("Quit"), this, SLOT(close()));
 	
 	
+	QMenu *match = menuBar()->addMenu(tr("Match"));
+	match->addAction(tr("New..."), this, SLOT(newMatch()));
 }
+
+void Khess::newMatch()
+{
+	MatchDialog match;
+	
+	if( match.exec() == QDialog::Accepted )
+	{
+		Board::BoardView *view = new Board::BoardView;
+		addWidget(view);
+		
+		Game::Game *game = d->gameManager->newGame();
+		
+		Board::BoardItem *board = view->createBoard(game);
+		
+		IO::Interface *engine = InterfaceFactory::create<IO::EngineInterface>();
+		engine->openResource( match.params() );
+		
+		connect(board, SIGNAL(moved(const QString &)), engine, SLOT(doMove(const QString &)));
+		connect(engine, SIGNAL(moved(const QString &)), board, SLOT(doMove(const QString &)));
+	}
+}
+
+
+
 

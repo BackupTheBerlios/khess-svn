@@ -50,6 +50,9 @@ class Khess : public DWorkspaceMainWindow
 		void changeStatusbar(const QString& text);
 		void changeCaption(const QString& text);
 		
+		
+		void newMatch();
+		
 	protected:
 		void setupMenu();
 

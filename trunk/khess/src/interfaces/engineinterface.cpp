@@ -48,14 +48,14 @@ void EngineInterface::doMove(const QString &san)
 	send(san);
 }
 
-bool EngineInterface::openResource(const QString &command, const QStringList &args)
+bool EngineInterface::openResource(const InterfaceParams *params)
 {
 	d->engine = new QProcess(this);
 	
 	connect(d->engine, SIGNAL(readyReadStandardOutput()), this, SLOT(parseData()));
 	connect(d->engine, SIGNAL(readyReadStandardError()), this, SLOT(parseError()));
 	
-	d->engine->start(command, args);
+	d->engine->start(params->node(), params->args());
 	bool ok = d->engine->waitForStarted();
 	
 	if ( ok )
