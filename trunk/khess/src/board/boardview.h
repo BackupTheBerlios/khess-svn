@@ -40,9 +40,9 @@ class BoardView : public QGraphicsView
 		BoardView(QWidget * parent = 0);
 		~BoardView();
 		
-		void setGame(Game::Game *const game);
-		
 		QSize sizeHint() const;
+		
+		Board::BoardItem *createBoard(Game::Game *const game);
 		
 	protected:
 		void drawBackground(QPainter * painter, const QRectF & rect);

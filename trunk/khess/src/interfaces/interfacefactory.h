@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by                                                 *
- *   David Cuadrado  krawek@gmail.com                                      *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,18 +18,27 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "khiointerface.h"
+#ifndef INTERFACEFACTORY_H
+#define INTERFACEFACTORY_H
 
-namespace IO {
+#include "interfaces/interface.h"
 
-Interface::Interface(QObject *parent) : QObject(parent)
+/**
+	@author David Cuadrado <krawek@gmail.com>
+*/
+class InterfaceFactory
 {
-}
+	private:
+		InterfaceFactory();
+		
+	public:
+		~InterfaceFactory();
+		
+		template<typename io>
+				static IO::Interface *create()
+		{
+			return new io;
+		};
+};
 
-
-Interface::~Interface()
-{
-}
-
-}
-
+#endif

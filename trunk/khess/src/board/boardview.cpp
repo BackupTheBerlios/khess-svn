@@ -30,7 +30,7 @@ namespace Board {
 
 struct BoardView::Private
 {
-	BoardItem *boardItem;
+	QList<BoardItem *> boards;
 };
 
 BoardView::BoardView(QWidget * parent) : QGraphicsView(parent), d(new Private)
@@ -40,10 +40,6 @@ BoardView::BoardView(QWidget * parent) : QGraphicsView(parent), d(new Private)
 	QGraphicsScene *scene = new QGraphicsScene();
 	setScene(scene);
 	
-	d->boardItem = new BoardItem();
-	scene->addItem(d->boardItem);
-	
-	centerOn(d->boardItem->boundingRect().center());
 	setResizeAnchor(QGraphicsView::AnchorViewCenter);
 	
 #if 0
@@ -68,11 +64,22 @@ QSize BoardView::sizeHint() const
 	return QSize(400,400); // FIXME
 }
 
-void BoardView::setGame(Game::Game *const game)
+Board::BoardItem *BoardView::createBoard(Game::Game *const game)
 {
-	d->boardItem->setGame(game);
+	BoardItem *board = new BoardItem();
+	scene()->addItem(board);
+	
+	centerOn(board->boundingRect().center());
+	
+	board->setGame(game);
+	
+	d->boards << board;
+	
 	update();
+	
+	return board;
 }
+
 
 void BoardView::drawBackground(QPainter *painter, const QRectF &rect)
 {

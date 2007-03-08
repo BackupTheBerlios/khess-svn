@@ -38,7 +38,14 @@ EngineInterface::EngineInterface(QObject *parent) : IO::Interface(parent), d( ne
 
 EngineInterface::~EngineInterface()
 {
+	closeResource();
 	delete d;
+}
+
+void EngineInterface::doMove(const QString &san)
+{
+	qDebug() << "MOVE: " << san;
+	send(san);
 }
 
 bool EngineInterface::openResource(const QString &command, const QStringList &args)
@@ -89,7 +96,24 @@ void EngineInterface::parseData()
 {
 	QString data = QString::fromLocal8Bit(d->engine->readAllStandardOutput());
 	
-	qDebug() << "LEIDO: " << data;
+	qDebug() << "DATA: " << data;
+	
+	QStringList fields = data.split('\n');
+	
+	QRegExp moveRX("^move (.*)");
+	
+	foreach(QString line, fields)
+	{
+		if ( line.length() < 3 )
+		{
+			continue;
+		}
+		else if ( moveRX.indexIn(line) != -1)
+		{
+			QString move = moveRX.cap(1);
+			emit moved(move);
+		}
+	}
 }
 
 void EngineInterface::parseError()

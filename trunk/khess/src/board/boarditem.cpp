@@ -271,40 +271,59 @@ bool BoardItem::reposition(PieceItem* piece)
 		
 		Game::Move move(board, from, to);
 		
+		
 		if ((to < 8 || to > 55) && (board.at(from) == Game::WhitePawn || board.at(from) == Game::BlackPawn))
 		{
 			qWarning("PROMOTION!!!!!!");
 		}
 		
+		
 		if (board.isLegal(move))
 		{
-			movePiece(piece, from, to);
-			
-			if (d->game->atEnd())
-			{
-				d->game->addMove(move);
-			}
-			else
-			{
-				qFatal("No variants for now...");
-			}
-			
-			d->game->forward();
-			
-			if( move.isCastling() || move.isEnPassant() || move.isSpecial() )
-			{
-				drawBoard(); // FIXME: fix this lazy way! =P
-			}
-			
+			doMove(piece, move);
+			emit moved(board.moveToSAN(move));
 			return true;
-		}
-		else
-		{
-			qWarning("Illegal move!");
 		}
 	}
 	
 	return false;
+}
+
+void BoardItem::doMove(PieceItem* piece, const Game::Move &move)
+{
+	qDebug("Board::doMove!");
+	
+	if ( !move.isValid() ) return;
+	
+	
+	Game::Board board = d->game->board();
+	
+	movePiece(piece, move.from() , move.to());
+	
+	if (d->game->atEnd())
+	{
+		d->game->addMove(move);
+	}
+	else
+	{
+		qFatal("No variants for now...");
+	}
+	
+	d->game->forward();
+	
+	if( move.isCastling() || move.isEnPassant()/* || move.isSpecial()*/ )
+	{
+		drawBoard(); // FIXME: fix this lazy way! =P
+	}
+}
+
+void BoardItem::doMove(const QString &san)
+{
+	Game::Board board = d->game->board();
+	
+	Game::Move move = board.singleMove(san);
+	
+	doMove(d->squares[move.from()]->currentPiece(), move);
 }
 
 }

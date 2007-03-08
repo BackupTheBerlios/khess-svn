@@ -23,6 +23,7 @@
 #include <QGraphicsItem>
 
 #include <game/common.h>
+#include <game/move.h>
 
 namespace Game {
 	class Game;
@@ -36,8 +37,10 @@ class PieceItem;
  * @author Jorge Cuadrado <kuadrosx@zi0n>
 */
 
-class BoardItem : public QGraphicsItem
+class BoardItem : public QObject, public QGraphicsItem
 {
+	Q_OBJECT;
+	
 	public:
 		BoardItem(QGraphicsItem * parent = 0, QGraphicsScene * scene = 0);
 		~BoardItem();
@@ -58,6 +61,15 @@ class BoardItem : public QGraphicsItem
 		QPoint toCoord(const Game::Square &square);
 		Game::Square toSquare(const QPoint &coord);
 		Game::Square toSquare(int row, int col);
+		
+	private:
+		void doMove(PieceItem* piece, const Game::Move &move);
+		
+	public slots:
+		void doMove(const QString &san);
+		
+	signals:
+		void moved(const QString &san);
 		
 	private:
 		struct Private;

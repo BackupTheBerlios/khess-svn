@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by                                                 *
- *   David Cuadrado  krawek@gmail.com                                      *
+ *   Copyright (C) 2007 by David Cuadrado   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,33 +18,39 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef IOINTERFACE_H
-#define IOINTERFACE_H
+#ifndef IOENGINEINTERFACE_H
+#define IOENGINEINTERFACE_H
 
-#include <QObject>
-#include <QStringList>
+#include <interfaces/interface.h>
 
 namespace IO {
 
 /**
- * Interfaz con motores o internet.
- * @author David Cuadrado <krawek@gmail.com >
+ * @author David Cuadrado <krawek@gmail.com>
 */
-
-class Interface : public QObject
+class EngineInterface : public IO::Interface
 {
 	Q_OBJECT
 	public:
-		Interface(QObject *parent = 0);
-		virtual ~Interface();
-		virtual void send(const QString &data) = 0;
+		EngineInterface(QObject *parent = 0);
+		~EngineInterface();
 		
 	public slots:
-		virtual bool openResource(const QString &node, const QStringList &opts = QStringList() ) = 0;
-		virtual bool closeResource() = 0;
+		void doMove(const QString &san);
+		bool openResource(const QString &command, const QStringList &args = QStringList());
+		void send(const QString &data);
+		bool closeResource();
+		
+	protected slots:
+		void parseData();
+		void parseError();
 		
 	signals:
-		void dataReaded(const QString &data);
+		void moved(const QString &fen);
+		
+	private:
+		struct Private;
+		Private *const d;
 };
 
 }

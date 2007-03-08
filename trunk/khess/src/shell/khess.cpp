@@ -27,13 +27,14 @@
 #include <dosd.h>
 
 #include <board/boardview.h>
+#include <board/boarditem.h>
+
 #include <game/game.h>
 
 #include "gamemanager.h"
 
-#include "engineinterface.h"
-
-#include "interfacefactory.h"
+#include "interfaces/engineinterface.h"
+#include "interfaces/interfacefactory.h"
 
 
 struct Khess::Private
@@ -57,10 +58,14 @@ Khess::Khess() : DWorkspaceMainWindow(), d(new Private)
 	addWidget(view);
 	
 	Game::Game *game = d->gameManager->newGame();
-	view->setGame(game);
+	
+	Board::BoardItem *board = view->createBoard(game);
 	
 	IO::Interface *engine = InterfaceFactory::create<IO::EngineInterface>();
 	engine->openResource("crafty");
+	
+	connect(board, SIGNAL(moved(const QString &)), engine, SLOT(doMove(const QString &)));
+	connect(engine, SIGNAL(moved(const QString &)), board, SLOT(doMove(const QString &)));
 	
 	statusBar()->show();
 	setupMenu();

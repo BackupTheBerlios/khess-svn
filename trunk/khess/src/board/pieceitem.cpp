@@ -152,7 +152,7 @@ void PieceItem::chooseSvg()
 		}
 		else
 		{
-			qWarning("Cannot open file %s", fileName);
+			qWarning("Cannot open file %s", qPrintable(fileName));
 		}
 	}
 }
