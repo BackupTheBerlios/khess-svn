@@ -51,7 +51,10 @@ class Khess : public DWorkspaceMainWindow
 		void changeCaption(const QString& text);
 		
 		
-		void newMatch();
+		void connectToServer();
+		void newLocalMatch();
+		
+		
 		
 	protected:
 		void setupMenu();

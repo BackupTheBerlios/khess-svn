@@ -18,86 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "matchdialog.h"
-#include <QCheckBox>
-#include <QVBoxLayout>
-#include <QComboBox>
-#include <QSpinBox>
-#include <QLineEdit>
-#include <QtDebug>
+#ifndef CONNECTDIALOG_H
+#define CONNECTDIALOG_H
 
-#include <QProcess>
+#include <QDialog>
 
-#include <interfaces/internetinterface.h>
-
-#include <dformfactory.h>
-
-struct MatchDialog::Private
+namespace IO
 {
-	IO::InterfaceParams *params;
-	
-	QComboBox *engine;
+	class InterfaceNetParams;
 };
 
-MatchDialog::MatchDialog()
-	: DTabDialog(DTabDialog::Ok|DTabDialog::Cancel), d(new Private)
+/**
+	@author David Cuadrado <krawek@gmail.com>
+*/
+class ConnectDialog : public QDialog
 {
-	QWidget *page1 = new QWidget;
-	
-	QVBoxLayout *layout = new QVBoxLayout(page1);
-	
-	d->engine = new QComboBox;
-	findEngines();
-	
-	layout->addWidget(d->engine);
-	
-	addTab(page1, tr("Configure"));
-	
-	d->params = new IO::InterfaceParams;
-}
-
-
-MatchDialog::~MatchDialog()
-{
-	delete d;
-}
-
-void MatchDialog::setupInetBox()
-{
-
-}
-
-void MatchDialog::findEngines()
-{
-	QStringList engines = QStringList() << "crafty" << "gnuchess";
-	
-	foreach(QString engine, engines)
-	{
-		QProcess proc;
-		proc.start(engine);
+	Q_OBJECT
+	public:
+		ConnectDialog(QWidget *parent = 0);	
+		~ConnectDialog();
 		
-		if( proc.waitForStarted() )
-		{
-			d->engine->addItem(engine);
-			
-			proc.terminate();
-			proc.waitForFinished();
-			proc.kill();
-		}
-	}
-}
+		IO::InterfaceNetParams *params();
+		
+	private:
+		struct Private;
+		Private *const d;
+};
 
-IO::InterfaceParams *MatchDialog::params()
-{
-	QString engine = d->engine->currentText();
-	
-	if(engine.isEmpty()) return 0;
-	
-	d->params->setNode(engine);
-	
-	return d->params;
-}
-
-
-
-
+#endif

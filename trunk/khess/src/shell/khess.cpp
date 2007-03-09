@@ -33,9 +33,11 @@
 
 #include "interfaces/engineinterface.h"
 #include "interfaces/interfacefactory.h"
+#include "interfaces/internetinterface.h"
 
 #include "gamemanager.h"
 #include "matchdialog.h"
+#include "connectdialog.h"
 
 
 struct Khess::Private
@@ -103,27 +105,55 @@ void Khess::setupMenu()
 	
 	
 	QMenu *match = menuBar()->addMenu(tr("Match"));
-	match->addAction(tr("New..."), this, SLOT(newMatch()));
+	match->addAction(tr("New..."), this, SLOT(newLocalMatch()));
+	
+	QMenu *network = menuBar()->addMenu(tr("Network"));
+	network->addAction(tr("Connect to server..."), this, SLOT(connectToServer()));
 }
 
-void Khess::newMatch()
+void Khess::connectToServer()
+{
+	ConnectDialog dialog;
+	if ( dialog.exec() == QDialog::Accepted )
+	{
+		IO::Interface *engine = InterfaceFactory::create<IO::InternetInterface>();
+		
+		if( engine->openResource( dialog.params() ) )
+		{
+			
+		}
+		else
+		{
+			DOsd::self()->display(tr("Cannot connect to server"), DOsd::Fatal);
+		}
+	}
+}
+
+void Khess::newLocalMatch()
 {
 	MatchDialog match;
 	
 	if( match.exec() == QDialog::Accepted )
 	{
-		Board::BoardView *view = new Board::BoardView;
-		addWidget(view);
-		
-		Game::Game *game = d->gameManager->newGame();
-		
-		Board::BoardItem *board = view->createBoard(game);
-		
 		IO::Interface *engine = InterfaceFactory::create<IO::EngineInterface>();
-		engine->openResource( match.params() );
 		
-		connect(board, SIGNAL(moved(const QString &)), engine, SLOT(doMove(const QString &)));
-		connect(engine, SIGNAL(moved(const QString &)), board, SLOT(doMove(const QString &)));
+		if( engine->openResource( match.params() ) )
+		{
+			Board::BoardView *view = new Board::BoardView;
+			addWidget(view);
+			
+			Game::Game *game = d->gameManager->newGame();
+			
+			Board::BoardItem *board = view->createBoard(game);
+			
+			
+			connect(board, SIGNAL(moved(const QString &)), engine, SLOT(doMove(const QString &)));
+			connect(engine, SIGNAL(moved(const QString &)), board, SLOT(doMove(const QString &)));
+		}
+		else
+		{
+			DOsd::self()->display(tr("Cannot start engine"), DOsd::Fatal);
+		}
 	}
 }
 

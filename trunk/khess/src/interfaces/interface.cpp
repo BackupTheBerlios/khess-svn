@@ -40,10 +40,12 @@ InterfaceParams::~InterfaceParams()
 
 void InterfaceParams::setNode(const QString &node)
 {
+	d->node = node;
 }
 
 void InterfaceParams::setArgs(const QStringList &args)
 {
+	d->args = args;
 }
 
 

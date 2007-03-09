@@ -18,86 +18,57 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#include "matchdialog.h"
-#include <QCheckBox>
-#include <QVBoxLayout>
-#include <QComboBox>
-#include <QSpinBox>
-#include <QLineEdit>
-#include <QtDebug>
+#ifndef IOINTERNETINTERFACE_H
+#define IOINTERNETINTERFACE_H
 
-#include <QProcess>
+#include <interfaces/interface.h>
 
-#include <interfaces/internetinterface.h>
+namespace IO {
 
-#include <dformfactory.h>
-
-struct MatchDialog::Private
+class InterfaceNetParams :  public IO::InterfaceParams
 {
-	IO::InterfaceParams *params;
+	public:
+		InterfaceNetParams();
+		~InterfaceNetParams();
+		void setLogin(const QString &login);
+		void setPassword(const QString &password);
+		void setLogAsGuest(bool e);
+		
+		QString password() const;
+		QString login() const;
+		bool logAsGuest() const;
 	
-	QComboBox *engine;
+	
+	private:
+		struct Private;
+		Private *const d;
 };
 
-MatchDialog::MatchDialog()
-	: DTabDialog(DTabDialog::Ok|DTabDialog::Cancel), d(new Private)
+/**
+	@author David Cuadrado <krawek@gmail.com>
+*/
+class InternetInterface : public IO::Interface
 {
-	QWidget *page1 = new QWidget;
-	
-	QVBoxLayout *layout = new QVBoxLayout(page1);
-	
-	d->engine = new QComboBox;
-	findEngines();
-	
-	layout->addWidget(d->engine);
-	
-	addTab(page1, tr("Configure"));
-	
-	d->params = new IO::InterfaceParams;
-}
-
-
-MatchDialog::~MatchDialog()
-{
-	delete d;
-}
-
-void MatchDialog::setupInetBox()
-{
-
-}
-
-void MatchDialog::findEngines()
-{
-	QStringList engines = QStringList() << "crafty" << "gnuchess";
-	
-	foreach(QString engine, engines)
-	{
-		QProcess proc;
-		proc.start(engine);
+	Q_OBJECT
+	public:
+		InternetInterface(QObject *parent = 0);
+		~InternetInterface();
 		
-		if( proc.waitForStarted() )
-		{
-			d->engine->addItem(engine);
-			
-			proc.terminate();
-			proc.waitForFinished();
-			proc.kill();
-		}
-	}
+	public slots:
+		void doMove(const QString &san);
+		bool openResource(const InterfaceParams *params);
+		void send(const QString &data);
+		bool closeResource();
+		
+	protected slots:
+		void handleDisconnection();
+		void parseData();
+		
+	private:
+		struct Private;
+		Private *const d;
+};
+
 }
 
-IO::InterfaceParams *MatchDialog::params()
-{
-	QString engine = d->engine->currentText();
-	
-	if(engine.isEmpty()) return 0;
-	
-	d->params->setNode(engine);
-	
-	return d->params;
-}
-
-
-
-
+#endif

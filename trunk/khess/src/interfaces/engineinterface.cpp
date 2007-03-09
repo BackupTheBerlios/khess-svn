@@ -33,7 +33,10 @@ struct EngineInterface::Private
 
 EngineInterface::EngineInterface(QObject *parent) : IO::Interface(parent), d( new Private)
 {
-	d->engine = 0;
+	d->engine = new QProcess(this);
+	
+	connect(d->engine, SIGNAL(readyReadStandardOutput()), this, SLOT(parseData()));
+	connect(d->engine, SIGNAL(readyReadStandardError()), this, SLOT(parseError()));
 }
 
 EngineInterface::~EngineInterface()
@@ -50,11 +53,6 @@ void EngineInterface::doMove(const QString &san)
 
 bool EngineInterface::openResource(const InterfaceParams *params)
 {
-	d->engine = new QProcess(this);
-	
-	connect(d->engine, SIGNAL(readyReadStandardOutput()), this, SLOT(parseData()));
-	connect(d->engine, SIGNAL(readyReadStandardError()), this, SLOT(parseError()));
-	
 	d->engine->start(params->node(), params->args());
 	bool ok = d->engine->waitForStarted();
 	
@@ -70,21 +68,16 @@ bool EngineInterface::openResource(const InterfaceParams *params)
 
 bool EngineInterface::closeResource()
 {
-	if ( d->engine )
+	send("quit");
+	d->engine->terminate();
+	d->engine->waitForFinished();
+	
+	if ( d->engine->isOpen() )
 	{
-		send("quit");
-		d->engine->terminate();
-		d->engine->waitForFinished();
-		
-		if ( d->engine->isOpen() )
-		{
-			d->engine->kill();
-		}
-		
-		return d->engine->isOpen();
+		d->engine->kill();
 	}
 	
-	return false;
+	return d->engine->isOpen();
 }
 
 void EngineInterface::send(const QString &data)

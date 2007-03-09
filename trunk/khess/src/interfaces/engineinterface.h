@@ -45,9 +45,6 @@ class EngineInterface : public IO::Interface
 		void parseData();
 		void parseError();
 		
-	signals:
-		void moved(const QString &fen);
-		
 	private:
 		struct Private;
 		Private *const d;

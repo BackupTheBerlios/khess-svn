@@ -62,7 +62,8 @@ class Interface : public QObject
 		virtual bool closeResource() = 0;
 		
 	signals:
-		void dataReaded(const QString &data);
+		void moved(const QString &fen);
+		
 };
 
 }

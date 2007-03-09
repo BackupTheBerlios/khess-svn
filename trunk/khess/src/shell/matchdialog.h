@@ -31,15 +31,17 @@ namespace IO {
 */
 class MatchDialog : public DTabDialog
 {
+	Q_OBJECT;
+	
 	public:
 		MatchDialog();
 		~MatchDialog();
 		
 		IO::InterfaceParams *params();
 		
-	protected:
 		
 	private:
+		void setupInetBox();
 		void findEngines();
 		
 	private:
